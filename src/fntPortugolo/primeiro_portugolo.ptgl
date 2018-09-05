@@ -1,4 +1,10 @@
-algoritmo 
+algoritmo
+	>
+	>=
+	<
+	<>
+	<=
+	<-***********************-
 	declare 
 	op literal;
 	
