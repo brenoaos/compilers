@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lexer;
 
 import java.util.Map;
 import java.util.HashMap;
 
-/**
- *
- * @author gustavo
- */
 public class TS {
     
     private HashMap<String, Token> tabelaSimbolos; // Tabela de símbolos do ambiente
@@ -107,8 +98,7 @@ public class TS {
         tabelaSimbolos.put(s, w);
     }
 
-    // Pesquisa na tabela de símbolos se há algum token com determinado lexema
-    // vamos usar esse metodo somente para diferenciar ID e KW
+
     public Token retornaToken(String lexema) {
 		  Token token = tabelaSimbolos.get(lexema); 
 		  return token;   	
