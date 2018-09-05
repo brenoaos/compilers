@@ -104,6 +104,29 @@ public class TS {
 		  return token;   	
     }
     
+    
+    
+    /*
+     * @method Token
+     * @author Breno
+     * @description 
+     *  O método recebe 4 parametros oriundo do Compilador.ProxToken()
+     *  Procura um token já existente na tabela de simbolos. Se existe, retorna o token.
+     *  Caso contrario, cadastra um novo token e o retorna.
+     */
+    
+    public Token token(String lexema, Tag tag, int n_lin, int n_col) {
+    	Token token;
+    	token = this.retornaToken(lexema);
+    		if(token == null) {
+    			token = new Token(tag,lexema,n_lin,n_col);
+    			this.tabelaSimbolos.put(lexema, token);
+    		}
+    	token.setColuna(n_col);
+    	token.setLinha(n_lin);
+    	return token;
+    }
+    
     @Override
     public String toString() {
         String saida = "";
