@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lexer;
 
 import java.util.Map;
 import java.util.HashMap;
 
-/**
- *
- * @author gustavo
- */
 public class TS {
     
     private HashMap<String, Token> tabelaSimbolos; // Tabela de símbolos do ambiente
@@ -21,34 +12,93 @@ public class TS {
 
         // Inserindo as palavras reservadas
         Token word;
-        word = new Token(Tag.KW, "public", 0, 0);
-        this.tabelaSimbolos.put("public", word);
+        word = new Token(Tag.KW, "algoritmo", 0, 0);
+        this.tabelaSimbolos.put("algoritmo", word);
         
-        word = new Token(Tag.KW, "class", 0, 0);
-        this.tabelaSimbolos.put("class", word);
+        word = new Token(Tag.KW, "declare", 0, 0);
+        this.tabelaSimbolos.put("declare", word);
         
-        word = new Token(Tag.KW, "SystemOutDispln", 0, 0);
-        this.tabelaSimbolos.put("SystemOutDispln", word);
+        word = new Token(Tag.KW, "fim", 0, 0);
+        this.tabelaSimbolos.put("fim", word);
         
-        word = new Token(Tag.KW, "end", 0, 0);
-        this.tabelaSimbolos.put("end", word);
+        word = new Token(Tag.KW, "subrotina", 0, 0);
+        this.tabelaSimbolos.put("subrotina", word);
         
-        word = new Token(Tag.KW, "integer", 0, 0);
-        this.tabelaSimbolos.put("integer", word);
+        word = new Token(Tag.KW, "declare", 0, 0);
+        this.tabelaSimbolos.put("declare", word);
 
-        word = new Token(Tag.KW, "double", 0, 0);
-        this.tabelaSimbolos.put("double", word);
+        word = new Token(Tag.KW, "retorne", 0, 0);
+        this.tabelaSimbolos.put("retorne", word);
         
-        word = new Token(Tag.KW, "string", 0, 0);
-        this.tabelaSimbolos.put("string", word);
+        word = new Token(Tag.KW, "logico", 0, 0);
+        this.tabelaSimbolos.put("logico", word);
+        
+        word = new Token(Tag.KW, "numerico", 0, 0);
+        this.tabelaSimbolos.put("numerico", word);
+        
+        word = new Token(Tag.KW, "literal", 0, 0);
+        this.tabelaSimbolos.put("literal", word);
+        
+        word = new Token(Tag.KW, "nulo", 0, 0);
+        this.tabelaSimbolos.put("nulo", word);
+        
+        word = new Token(Tag.KW, "se", 0, 0);
+        this.tabelaSimbolos.put("se", word);
+        
+        word = new Token(Tag.KW, "inicio", 0, 0);
+        this.tabelaSimbolos.put("inicio", word);
+        
+        word = new Token(Tag.KW, "fim", 0, 0);
+        this.tabelaSimbolos.put("fim", word);
+        
+        word = new Token(Tag.KW, "senao", 0, 0);
+        this.tabelaSimbolos.put("senao", word);
+        
+        word = new Token(Tag.KW, "enquanto", 0, 0);
+        this.tabelaSimbolos.put("enquanto", word);
+        
+        word = new Token(Tag.KW, "faca", 0, 0);
+        this.tabelaSimbolos.put("faca", word);
+        
+        word = new Token(Tag.KW, "para", 0, 0);
+        this.tabelaSimbolos.put("para", word);
+        
+        word = new Token(Tag.KW, "ate", 0, 0);
+        this.tabelaSimbolos.put("ate", word);
+        
+        word = new Token(Tag.KW, "faca", 0, 0);
+        this.tabelaSimbolos.put("faca", word);
+        
+        word = new Token(Tag.KW, "repita", 0, 0);
+        this.tabelaSimbolos.put("repita", word);
+        
+        word = new Token(Tag.KW, "escreva", 0, 0);
+        this.tabelaSimbolos.put("escreva", word);
+        
+        word = new Token(Tag.KW, "leia", 0, 0);
+        this.tabelaSimbolos.put("leia", word);
+        
+        word = new Token(Tag.KW, "verdadeiro", 0, 0);
+        this.tabelaSimbolos.put("verdadeiro", word);
+        
+        word = new Token(Tag.KW, "falso", 0, 0);
+        this.tabelaSimbolos.put("falso", word);
+        
+        word = new Token(Tag.KW, "nao", 0, 0);
+        this.tabelaSimbolos.put("nao", word);
+        
+        word = new Token(Tag.KW, "e", 0, 0);
+        this.tabelaSimbolos.put("e", word);
+        
+        word = new Token(Tag.KW, "ou", 0, 0);
+        this.tabelaSimbolos.put("ou", word);   
     }
     
     public void put(String s, Token w) {
         tabelaSimbolos.put(s, w);
     }
 
-    // Pesquisa na tabela de símbolos se há algum token com determinado lexema
-    // vamos usar esse metodo somente para diferenciar ID e KW
+
     public Token retornaToken(String lexema) {
 		  Token token = tabelaSimbolos.get(lexema); 
 		  return token;   	

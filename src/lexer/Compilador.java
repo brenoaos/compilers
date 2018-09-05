@@ -1,22 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lexer;
 
 import java.io.*;
 
-/**
- *
- * @author gustavo
- */
 public class Compilador {
     
    private static final int END_OF_FILE = -1; // contante para fim do arquivo
    private static int lookahead = 0; // armazena o último caractere lido do arquivo	
-   public static int n_line = 1; // contador de linhas
-   public static int n_column = 1; // contador de linhas
+   public static int n_line = 0; // contador de linhas
+   public static int n_column = 0; // contador de linhas
    private RandomAccessFile instance_file; // referencia para o arquivo
    private static TS tabelaSimbolos; // tabela de simbolos
     
@@ -60,6 +51,7 @@ public class Compilador {
          // Não é necessário retornar o ponteiro em caso de Fim de Arquivo
          if(lookahead != END_OF_FILE) {
             instance_file.seek(instance_file.getFilePointer() - 1);
+            this.n_column --;
          }    
       }
       catch(IOException e) {
@@ -67,8 +59,9 @@ public class Compilador {
          System.exit(4);
       }
    }
-    
-    /* TODO:
+   
+  
+    /* 
     //[1]   Voce devera se preocupar quando incremetar as linhas e colunas,
     //      assim como quando decrementar ou reseta-las.
     //[2]   Toda vez que voce encontrar um lexema completo, voce deve retornar
@@ -85,24 +78,24 @@ public class Compilador {
       StringBuilder lexema = new StringBuilder();
       int estado = 1;
       char c;
-		
+      
       while(true) {
          c = '\u0000'; // null char
-            
          // avanca caractere ou retorna token
          try {
             // read() retorna um inteiro. -1 em caso de EOF
             lookahead = instance_file.read();
-                
+            
             if(lookahead != END_OF_FILE) {
                c = (char) lookahead; // conversao int para char
+               this.n_column ++;
             }
          }
          catch(IOException e) {
             System.out.println("Erro na leitura do arquivo");
             System.exit(3);
          }
-            
+
          // movimentacao do automato
          switch(estado) {
             // estado 1
@@ -112,6 +105,10 @@ public class Compilador {
                else if(c == ' ' || c == '\t' || c == '\n' || c == '\r') {
                   // Permance no estado = 1
                   estado = 1;
+                  if(c == '\n' || c == '\r') {
+                	  this.n_line ++;
+                	  this.n_column = 1;
+                  }
                }
                else if(Character.isLetter(c)) {
                   lexema.append(c);
@@ -232,7 +229,7 @@ public class Compilador {
                else {
                   //estado = 20;
                   retornaPonteiro();
-                  return new Token(Tag.INTEGER, lexema.toString(), n_line, n_column);
+                  return new Token(Tag.TP_NUMERICO, lexema.toString(), n_line, n_column);
                }
                break;
             case 21:
@@ -254,7 +251,7 @@ public class Compilador {
                else {
                   //estado = 23;
                   retornaPonteiro();
-                  return new Token(Tag.DOUBLE, lexema.toString(), n_line, n_column);
+                  return new Token(Tag.TP_NUMERICO, lexema.toString(), n_line, n_column);
                }
                break;
             case 24:
@@ -278,7 +275,7 @@ public class Compilador {
             case 25:
                if(c == '"') {
                   //estado = 26;
-                  return new Token(Tag.STRING, lexema.toString(), n_line, n_column);
+                  return new Token(Tag.TP_LITERAL, lexema.toString(), n_line, n_column);
                }
                else if(c == '\n') {
                   sinalizaErro("Padrao para [ConstString] invalido na linha " + n_line + " coluna " + n_column);

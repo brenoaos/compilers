@@ -1,47 +1,44 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lexer;
 
-/**
- *
- * @author gustavo
- */
 public enum Tag {
     
     // fim de arquivo
     EOF,
     
     //Operadores
-    RELOP_LT,       // <
-    RELOP_LE,       // <=
-    RELOP_GT,       // >
-    RELOP_GE,       // >=
-    RELOP_EQ,       // ==
-    RELOP_NE,       // !=
-    RELOP_ASSIGN,   // =
-    RELOP_SUM,      // +
-    RELOP_MINUS,    // -
-    RELOP_MULT,     // *
-    RELOP_DIV,      // /
+    RELOP_LT,       // 		<
+    RELOP_LE,       // 		<=
+    RELOP_GT,       // 		>
+    RELOP_GE,       // 		>=
+    RELOP_EQ,       // 		==
+    RELOP_NE,       // 		!=
+    RELOP_ASSIGN,   // 		=
+    RELOP_SUM,      // 		+
+    RELOP_MINUS,    // 		-
+    RELOP_MULT,     // 		*
+    RELOP_DIV,      // 		/
+    
+    
+    //COMENTARIOS
+    CMNT_OPEN,		//		/*
+    CMNT_CLOSE,		//		*/
+    CMNT_LINE,		//		//
     
     //Simbolos
-    SMB_OP,         // (
-    SMB_CP,         // )
-    SMB_SEMICOLON,  // ;
+    SMB_OP,         // 		(
+    SMB_CP,         // 		)
+    SMB_SEMICOLON,  // 		;
+    SMB_COMMA,		// 		,
     
     //identificador
     ID,
     
-    //numeros
-    INTEGER,
-    DOUBLE,
-    
-    //strings
-    STRING,
-    
+    //tipos
+    TP_NUMERICO,
+    TP_LOGICO,
+    TP_LITERAL,
+    TP_NULO,
+ 
     // palavra reservada
     KW;
 }
