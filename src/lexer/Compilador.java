@@ -6,8 +6,8 @@ public class Compilador {
     
    private static final int END_OF_FILE = -1; // contante para fim do arquivo
    private static int lookahead = 0; // armazena o último caractere lido do arquivo	
-   public static int n_line = 0; // contador de linhas
-   public static int n_column = 0; // contador de linhas
+   public static int n_line = 1; // contador de linhas
+   public static int n_column = 1; // contador de linhas
    private RandomAccessFile instance_file; // referencia para o arquivo
    private static TS tabelaSimbolos; // tabela de simbolos
     
@@ -297,8 +297,11 @@ public class Compilador {
     /**
      * @param args the command line arguments
      */
+   
+   //breno - Trampo → /home/breno/projetos_outros/compilers/src/fntPortugolo/primeiro_portugolo.ptgl
+   
    public static void main(String[] args) {
-      Compilador lexer = new Compilador("HelloJavinha.jvn");
+      Compilador lexer = new Compilador("/home/breno/projetos_outros/compilers/src/fntPortugolo/primeiro_portugolo.ptgl");
       Token token;
       tabelaSimbolos = new TS();
 
@@ -308,7 +311,7 @@ public class Compilador {
             
          // Imprime token
          if(token != null) {
-            System.out.println("Token: " + token.toString() + "\t Linha: " + n_line + "\t Coluna: " + n_column);
+            System.out.println("Token: " + token.toString() + "\n\t Linha: " + n_line + "\t Coluna: " + n_column + "\n");
          }
 	     
       } while(token != null && token.getClasse() != Tag.EOF);
