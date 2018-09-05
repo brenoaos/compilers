@@ -10,7 +10,7 @@ public class Compilador {
 	public static int n_column = 1; // contador de linhas
 	private RandomAccessFile instance_file; // referencia para o arquivo
 	private static TS tabelaSimbolos; // tabela de simbolos
-	private static int n_erro = -1;
+	private static int n_erro = -2;
 
 	public Compilador(String input_data) {
 
