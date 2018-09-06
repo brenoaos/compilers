@@ -10,7 +10,8 @@ public class Compilador {
 	public static int n_column = 1; // contador de linhas
 	private RandomAccessFile instance_file; // referencia para o arquivo
 	private static TS tabelaSimbolos; // tabela de simbolos
-	private static int n_erro = -2;
+	private static int n_erro = -1;
+	private static String msgImp = "";
 
 	public Compilador(String input_data) {
 
@@ -39,13 +40,22 @@ public class Compilador {
 
 	// Reporta erro para o usuário
 	public void sinalizaErro(String mensagem) {
-		if(n_erro < 0 && mensagem == "") {
-			this.n_erro = -1;
+		if (n_erro < 0) {
+			if(mensagem != msgImp) {
+				n_erro ++;
+				msgImp = mensagem;
+				System.out.println("[Erro Lexico]: " + mensagem + "\n");
+			}
+			else if(n_erro == 0 && !mensagem.equals(msgImp) && !mensagem.equals("")) {
+				msgImp = mensagem;
+				System.out.println("[Erro Lexico]: " + mensagem + "\n");
+			
+			}
 		}
-		if(n_erro < 0 && mensagem != "") {
-			this.n_erro ++;
-			System.out.println("[Erro Lexico]: " + mensagem + "\n");
-		}
+			if(n_erro > -1 && mensagem.equals("")) {
+				n_erro = -1;
+			}
+		
 	}
 
 	// Volta uma posição do buffer de leitura
@@ -173,7 +183,7 @@ public class Compilador {
 				}
 				else {
 					sinalizaErro("Caractere invalido " + c + " na linha " + n_line + " e coluna " + n_column);
-					return null;
+					//return null;
 				}
 				break;
 			case 4:
@@ -207,17 +217,22 @@ public class Compilador {
 			case 6:
 				if (c == '=') {
 					// estado = 7;
-					return new Token(Tag.RELOP_LE, "<=", n_line, n_column);
+					return tabelaSimbolos.token("<=", Tag.RELOP_LE, n_line, n_column);					
 				} else {
 					// estado = 8;
 					retornaPonteiro();
-					return new Token(Tag.RELOP_LT, "<", n_line, n_column);
+					return tabelaSimbolos.token("<", Tag.RELOP_LE, n_line, n_column);
+					
 				}
 			case 8:		//Tratamento modo Panico
 				if (c == '-') {
 					// Estado Q9;
 					return tabelaSimbolos.token("<--", Tag.RELOP_ASSIGN, n_line, n_column);
+				} else if (END_OF_FILE == -1) {
+					sinalizaErro("Fim de arquivo!\nEsperado '-' mas recebeu " + c + "\n\tLinha: " + n_line + "\tColuna: " + n_column);
+					return null;
 				}
+				
 				sinalizaErro("Esperado '-' mas recebeu " + c + "\n\tLinha: " + n_line + "\tColuna: " + n_column);
 				break;
 			case 11:
@@ -305,7 +320,7 @@ public class Compilador {
 				else {
 					// estado Q26
 					retornaPonteiro();
-					return new Token(Tag.TP_NUMERICO, lexema.toString(), n_line, n_column);
+					return tabelaSimbolos.token(lexema.toString(),Tag.NUMERICO, n_line, n_column);					
 				}
 				break;
 			case 24:
@@ -315,7 +330,7 @@ public class Compilador {
 				else {
 					// estado Q26
 					retornaPonteiro();
-					return new Token(Tag.TP_NUMERICO, lexema.toString(), n_line, n_column);
+					return tabelaSimbolos.token(lexema.toString(),Tag.NUMERICO, n_line, n_column);
 				}
 				break;
 //			case 25:
@@ -345,7 +360,7 @@ public class Compilador {
 			case 29:
 				if(c == '"') {
 					// Estado Q30
-					return tabelaSimbolos.token(lexema.toString(), Tag.ID, n_line, n_column);
+					return tabelaSimbolos.token(lexema.toString(), Tag.LITERAL, n_line, n_column);
 				}
 				lexema.append(c);
 				break;

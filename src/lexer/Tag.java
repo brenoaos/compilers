@@ -30,15 +30,16 @@ public enum Tag {
     SMB_CP,         // 		)
     SMB_SEMICOLON,  // 		;
     SMB_COMMA,		// 		,
+        
     
     //identificador
     ID,
     
     //tipos
-    TP_NUMERICO,
-    TP_LOGICO,
-    TP_LITERAL,
-    TP_NULO,
+    NUMERICO,
+    LOGICO,
+    LITERAL,
+    NULO,
  
     // palavra reservada
     KW;
