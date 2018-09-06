@@ -10,7 +10,7 @@ public class Compilador {
 	public static int n_column = 1; // contador de linhas
 	private RandomAccessFile instance_file; // referencia para o arquivo
 	private static TS tabelaSimbolos; // tabela de simbolos
-	private static int n_erro = -1;
+	private static int n_erro = -2;
 
 	public Compilador(String input_data) {
 
@@ -168,9 +168,23 @@ public class Compilador {
 				else if (c == ')') {
 					estado = 15;
 				} 
+				else if( c == '=') {
+					return tabelaSimbolos.token("=", Tag.RELOP_SUM, n_line, n_column);
+				}
 				else {
 					sinalizaErro("Caractere invalido " + c + " na linha " + n_line + " e coluna " + n_column);
 					return null;
+				}
+				break;
+			case 4:
+				if(c == '/') {
+					estado = 19;
+				}
+				else if(c == '*') {
+					estado = 18;
+				}
+				else {
+					return tabelaSimbolos.token("/", Tag.RELOP_DIV, n_line, n_column);
 				}
 				break;
 			case 5:
@@ -235,17 +249,37 @@ public class Compilador {
 					return new Token(Tag.ID, lexema.toString(), n_line, n_column);
 				}
 				break;
+			case 18:
+				if (c == '\n' || c == '\r') {
+					//Reinicia o automato
+					this.n_line++;
+				}
+				else if(c == '\t') {
+					this.n_column += 3;
+				}
+				else if(c == '*') {
+					estado = 180;
+				}
+				break;
+			case 180:
+				if(c == '/') {
+					estado = 0;
+				}
+				else {
+					estado = 18;
+				}
+				break;
 			case 19:
-				if (Character.isDigit(c)) {
-					lexema.append(c);
-					// Permanece no estado 19
-				} else if (c == '.') {
-					lexema.append(c);
-					estado = 21;
-				} else {
-					// estado = 20;
-					retornaPonteiro();
-					return new Token(Tag.TP_NUMERICO, lexema.toString(), n_line, n_column);
+				if (c == '\n' || c == '\r') {
+					//Reinicia o automato
+					this.n_line++;
+					estado = 0;
+				}
+				break;
+			case 20:
+				if (c == '/') {
+					//Reinicia o automato
+					estado = 0;
 				}
 				break;
 			case 21:
@@ -311,7 +345,7 @@ public class Compilador {
 			case 29:
 				if(c == '"') {
 					// Estado Q30
-					return tabelaSimbolos.token(lexema.toString(), Tag.TP_LITERAL, n_line, n_column);
+					return tabelaSimbolos.token(lexema.toString(), Tag.ID, n_line, n_column);
 				}
 				lexema.append(c);
 				break;
@@ -325,7 +359,10 @@ public class Compilador {
 
 	// breno - Trampo →
 	// /home/breno/projetos_outros/compilers/src/fntPortugolo/primeiro_portugolo.ptgl
-
+	
+	// Renato - Pessoal
+	// E:\Projetos\compiler\src\fntPortugolo\primeiro_portugolo.ptgl
+	
 	public static void main(String[] args) {
 		Compilador lexer = new Compilador(
 				"/home/breno/projetos_outros/compilers/src/fntPortugolo/primeiro_portugolo.ptgl");
@@ -339,7 +376,7 @@ public class Compilador {
 			// Imprime token
 			if (token != null) {
 				System.out.println(
-						"Token: " + token.toString() + "\n\t Linha: " + n_line + "\t Coluna: " + n_column + "\n");
+						"Token: " + token.toString() + "\n\t Linha: " + n_line + "\t Coluna: " + n_column + "");
 			}
 
 		} while (token != null && token.getClasse() != Tag.EOF);
