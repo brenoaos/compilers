@@ -147,11 +147,121 @@
 			<y>531.0</y>
 			<final/>
 		</state>
+		<state id="31" name="q31">
+			<x>266.0</x>
+			<y>104.0</y>
+			<final/>
+		</state>
 		<!--The list of transitions.-->
+		<transition>
+			<from>4</from>
+			<to>18</to>
+			<read>*</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>29</to>
+			<read>"</read>
+		</transition>
 		<transition>
 			<from>11</from>
 			<to>13</to>
 			<read>outro</read>
+		</transition>
+		<transition>
+			<from>22</from>
+			<to>26</to>
+			<read>outro</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>10</to>
+			<read>outro</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>2</to>
+			<read>-</read>
+		</transition>
+		<transition>
+			<from>4</from>
+			<to>19</to>
+			<read>/</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>14</to>
+			<read>(</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>3</to>
+			<read>*</read>
+		</transition>
+		<transition>
+			<from>25</from>
+			<to>26</to>
+			<read>outro</read>
+		</transition>
+		<transition>
+			<from>24</from>
+			<to>25</to>
+			<read>digito</read>
+		</transition>
+		<transition>
+			<from>8</from>
+			<to>9</to>
+			<read>-</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>8</to>
+			<read>-</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>0</to>
+			<read>Espaco, \n, \t, \rv</read>
+		</transition>
+		<transition>
+			<from>29</from>
+			<to>30</to>
+			<read>"</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>11</to>
+			<read>&gt;</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>27</to>
+			<read>Letra</read>
+		</transition>
+		<transition>
+			<from>11</from>
+			<to>12</to>
+			<read>=</read>
+		</transition>
+		<transition>
+			<from>3</from>
+			<to>20</to>
+			<read>\</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>1</to>
+			<read>+</read>
+		</transition>
+		<transition>
+			<from>27</from>
+			<to>27</to>
+			<read>letra/digito</read>
+		</transition>
+		<transition>
+			<from>22</from>
+			<to>24</to>
+			<read>ponto (.)</read>
 		</transition>
 		<transition>
 			<from>4</from>
@@ -174,79 +284,14 @@
 			<read>,</read>
 		</transition>
 		<transition>
-			<from>3</from>
-			<to>20</to>
-			<read>\</read>
-		</transition>
-		<transition>
 			<from>0</from>
-			<to>3</to>
-			<read>*</read>
-		</transition>
-		<transition>
-			<from>5</from>
-			<to>10</to>
-			<read>outro</read>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>0</to>
-			<read>Espaco, \n, \t, \rv</read>
-		</transition>
-		<transition>
-			<from>5</from>
-			<to>8</to>
-			<read>-</read>
+			<to>15</to>
+			<read>)</read>
 		</transition>
 		<transition>
 			<from>5</from>
 			<to>7</to>
 			<read>&gt;</read>
-		</transition>
-		<transition>
-			<from>22</from>
-			<to>26</to>
-			<read>outro</read>
-		</transition>
-		<transition>
-			<from>8</from>
-			<to>9</to>
-			<read>-</read>
-		</transition>
-		<transition>
-			<from>29</from>
-			<to>30</to>
-			<read>"</read>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>14</to>
-			<read>(</read>
-		</transition>
-		<transition>
-			<from>11</from>
-			<to>12</to>
-			<read>=</read>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>16</to>
-			<read>;</read>
-		</transition>
-		<transition>
-			<from>27</from>
-			<to>27</to>
-			<read>letra/digito</read>
-		</transition>
-		<transition>
-			<from>22</from>
-			<to>24</to>
-			<read>ponto (.)</read>
-		</transition>
-		<transition>
-			<from>25</from>
-			<to>26</to>
-			<read>outro</read>
 		</transition>
 		<transition>
 			<from>0</from>
@@ -255,23 +300,13 @@
 		</transition>
 		<transition>
 			<from>0</from>
-			<to>15</to>
-			<read>)</read>
-		</transition>
-		<transition>
-			<from>5</from>
-			<to>6</to>
+			<to>31</to>
 			<read>=</read>
 		</transition>
 		<transition>
-			<from>4</from>
-			<to>18</to>
-			<read>*</read>
-		</transition>
-		<transition>
-			<from>27</from>
-			<to>28</to>
-			<read>outro</read>
+			<from>0</from>
+			<to>16</to>
+			<read>;</read>
 		</transition>
 		<transition>
 			<from>29</from>
@@ -279,39 +314,14 @@
 			<read>caracter ASCII</read>
 		</transition>
 		<transition>
-			<from>0</from>
-			<to>4</to>
-			<read>/</read>
+			<from>27</from>
+			<to>28</to>
+			<read>outro</read>
 		</transition>
 		<transition>
-			<from>0</from>
-			<to>29</to>
-			<read>"</read>
-		</transition>
-		<transition>
-			<from>24</from>
-			<to>25</to>
-			<read>digito</read>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>11</to>
-			<read>&gt;</read>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>27</to>
-			<read>Letra</read>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>2</to>
-			<read>-</read>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>1</to>
-			<read>+</read>
+			<from>5</from>
+			<to>6</to>
+			<read>=</read>
 		</transition>
 		<transition>
 			<from>22</from>
@@ -324,8 +334,8 @@
 			<read>digito</read>
 		</transition>
 		<transition>
-			<from>4</from>
-			<to>19</to>
+			<from>0</from>
+			<to>4</to>
 			<read>/</read>
 		</transition>
 		<note>
@@ -427,6 +437,11 @@
 			<text>return literal </text>
 			<x>707.0</x>
 			<y>587.0</y>
+		</note>
+		<note>
+			<text>return =</text>
+			<x>182.0</x>
+			<y>94.0</y>
 		</note>
 	</automaton>
 </structure>

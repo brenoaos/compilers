@@ -1,19 +1,18 @@
 algoritmo
-	>
-	>=
-	<
-	<>
-	<=
-	<-***********************-
 	declare 
 	op literal;
-	
+// linha
 	escreva("Vc prefere Goku ou Vegeta? Informe G ou V: ");
 	leia(op);
 	se(op = "G") inicio 
 	   escreva("Oi, eu sou o Goku!");
 	fim 
-	senao inicio 
+	senao inicio
+	/*Multi linha
+	  multi linha */
+
+
+	   
 	   escreva("Seu inseto, achei que iria preferir o Kakaroto");
 	fim
 fim algoritmo 
