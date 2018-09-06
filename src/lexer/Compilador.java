@@ -362,10 +362,10 @@ public class Compilador {
 	
 	// Renato - Pessoal
 	// E:\Projetos\compiler\src\fntPortugolo\primeiro_portugolo.ptgl
-	
+
 	public static void main(String[] args) {
 		Compilador lexer = new Compilador(
-				"/home/breno/projetos_outros/compilers/src/fntPortugolo/primeiro_portugolo.ptgl");
+				"E:\\Projetos\\compiler\\src\\fntPortugolo\\primeiro_portugolo.ptgl");
 		Token token;
 		tabelaSimbolos = new TS();
 
