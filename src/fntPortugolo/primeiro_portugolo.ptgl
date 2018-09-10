@@ -1,6 +1,7 @@
 algoritmo
 	declare 
 	op literal;
+	num numerico;
 // linha
 	escreva("Vc prefere Goku ou Vegeta? Informe G ou V: ");
 	leia(op);
@@ -10,9 +11,7 @@ algoritmo
 	senao inicio
 	/*Multi linha
 	  multi linha */
-
-
-	   
+ numerico <-- 6,505.89;
 	   escreva("Seu inseto, achei que iria preferir o Kakaroto");
 	fim
 fim algoritmo 

@@ -30,16 +30,16 @@ public class TS {
         word = new Token(Tag.KW, "retorne", 0, 0);
         this.tabelaSimbolos.put("retorne", word);
         
-        word = new Token(Tag.TP_LOGICO, "logico", 0, 0);
+        word = new Token(Tag.KW, "logico", 0, 0);
         this.tabelaSimbolos.put("logico", word);
         
-        word = new Token(Tag.TP_NUMERICO, "numerico", 0, 0);
+        word = new Token(Tag.KW, "numerico", 0, 0);
         this.tabelaSimbolos.put("numerico", word);
         
-        word = new Token(Tag.TP_LITERAL, "literal", 0, 0);
+        word = new Token(Tag.KW, "literal", 0, 0);
         this.tabelaSimbolos.put("literal", word);
         
-        word = new Token(Tag.TP_NULO, "nulo", 0, 0);
+        word = new Token(Tag.KW, "nulo", 0, 0);
         this.tabelaSimbolos.put("nulo", word);
         
         word = new Token(Tag.KW, "se", 0, 0);
@@ -56,9 +56,6 @@ public class TS {
         
         word = new Token(Tag.KW, "enquanto", 0, 0);
         this.tabelaSimbolos.put("enquanto", word);
-        
-        word = new Token(Tag.KW, "faca", 0, 0);
-        this.tabelaSimbolos.put("faca", word);
         
         word = new Token(Tag.KW, "para", 0, 0);
         this.tabelaSimbolos.put("para", word);
@@ -78,10 +75,10 @@ public class TS {
         word = new Token(Tag.KW, "leia", 0, 0);
         this.tabelaSimbolos.put("leia", word);
         
-        word = new Token(Tag.KW, "verdadeiro", 0, 0);
+        word = new Token(Tag.TP_LOGICO, "verdadeiro", 0, 0);
         this.tabelaSimbolos.put("verdadeiro", word);
         
-        word = new Token(Tag.KW, "falso", 0, 0);
+        word = new Token(Tag.TP_LOGICO, "falso", 0, 0);
         this.tabelaSimbolos.put("falso", word);
         
         word = new Token(Tag.KW, "nao", 0, 0);

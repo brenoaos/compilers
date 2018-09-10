@@ -10,7 +10,9 @@ public class Compilador {
 	public static int n_column = 1; // contador de linhas
 	private RandomAccessFile instance_file; // referencia para o arquivo
 	private static TS tabelaSimbolos; // tabela de simbolos
-	private static int n_erro = -2;
+	private static int cod_erro = -1;
+	private static String msg_erro = "";
+	private static int num_erro = 0;
 
 	public Compilador(String input_data) {
 
@@ -36,16 +38,51 @@ public class Compilador {
 			System.exit(3);
 		}
 	}
+	
+	//Controle de ponteiro
+	//Soma linha e retorna coluna 
+	public void proxLinha() {
+		n_line ++;
+		n_column = 1;
+	}
 
+	
+	//
+	public static void resumoCompilador() {
+		if(num_erro > 0) {
+			System.out.println("Encontrado(os): " + num_erro + " erro(os).");
+		}
+		else {
+			System.out.println("Compilado com sucesso!");
+		}
+	}
+	
+	
 	// Reporta erro para o usuário
-	public void sinalizaErro(String mensagem) {
-		if(n_erro < 0 && mensagem == "") {
-			this.n_erro = -1;
+	public void sinalizaErro(String mensagem,int codErro) {
+ 
+		// 998	→ Erro de fim de arquivo inesperado
+		// 999	→ Reset
+		
+		if(codErro != cod_erro && codErro != 999) {
+			if(!mensagem.equals(msg_erro)) {
+				msg_erro = mensagem;
+				cod_erro = codErro;
+				num_erro ++;
+				System.out.println("\n\n" + mensagem + "\n\n");
+			}
 		}
-		if(n_erro < 0 && mensagem != "") {
-			this.n_erro ++;
-			System.out.println("[Erro Lexico]: " + mensagem + "\n");
+		else if(codErro == 999) {
+			cod_erro = codErro;
+			msg_erro = "";
 		}
+		
+		if(codErro == 998 && cod_erro != codErro) {
+			cod_erro = codErro;
+			num_erro ++;
+			System.out.println("\n\n" + mensagem + "\n\n");
+		}
+		
 	}
 
 	// Volta uma posição do buffer de leitura
@@ -55,7 +92,7 @@ public class Compilador {
 			// Não é necessário retornar o ponteiro em caso de Fim de Arquivo
 			if (lookahead != END_OF_FILE) {
 				instance_file.seek(instance_file.getFilePointer() - 1);
-				this.n_column--;
+				n_column--;
 			}
 		} catch (IOException e) {
 			System.out.println("Falha ao retornar a leitura\n" + e);
@@ -66,7 +103,7 @@ public class Compilador {
 	/*
 	 * //[1] Voce devera se preocupar quando incremetar as linhas e colunas, //
 	 * assim como quando decrementar ou reseta-las. //[2] Toda vez que voce
-	 * encontrar um lexema completo, voce deve retornar // um objeto new Token(Tag,
+	 * encontrar um lexema completo, voce deve retornar // um objeto tabelaSimbolos.token(Tag,
 	 * "lexema", linha, coluna). Cuidado com as // palavras reservadas que ja sao
 	 * cadastradas na TS. Essa consulta // voce devera fazer somente quando
 	 * encontrar um Identificador. //[3] Se o caractere lido nao casar com nenhum
@@ -82,7 +119,7 @@ public class Compilador {
 		char c;
 		
 		//recupera de um erro
-		sinalizaErro("");
+		sinalizaErro("",999);
 		
 		while (true) {
 			c = '\u0000'; // null char
@@ -93,7 +130,7 @@ public class Compilador {
 
 				if (lookahead != END_OF_FILE) {
 					c = (char) lookahead; // conversao int para char
-					this.n_column++;
+					n_column++;
 				}
 			} catch (IOException e) {
 				System.out.println("Erro na leitura do arquivo");
@@ -111,11 +148,10 @@ public class Compilador {
 					// Permance no estado = 0
 					estado = 0;
 					if (c == '\n' || c == '\r') {
-						this.n_line++;
-						this.n_column = 1;
+						proxLinha();
 					}
 					else if(c == '\t') {
-						this.n_column += 3;
+						n_column += 3;
 					}
 				} 
 				else if (Character.isLetter(c)) {
@@ -134,19 +170,19 @@ public class Compilador {
 				} 
 				else if (c == '(') {
 					//estado Q14;
-					return this.tabelaSimbolos.token("(", Tag.SMB_OP, n_line, n_column);
+					return tabelaSimbolos.token("(", Tag.SMB_OP, n_line, n_column);
 				} 
 				else if (c == ')') {
 					//estado Q15;
-					return this.tabelaSimbolos.token(")", Tag.SMB_CP, n_line, n_column);
+					return tabelaSimbolos.token(")", Tag.SMB_CP, n_line, n_column);
 				} 
 				else if (c == ';') {
 					//estado Q16;
-					return this.tabelaSimbolos.token(";", Tag.SMB_SEMICOLON, n_line, n_column);
+					return tabelaSimbolos.token(";", Tag.SMB_SEMICOLON, n_line, n_column);
 				} 
 				else if (c == ',') {
 					//estado Q17;
-					return this.tabelaSimbolos.token(",", Tag.SMB_COMMA, n_line, n_column);
+					return tabelaSimbolos.token(",", Tag.SMB_COMMA, n_line, n_column);
 				} 
 				else if (c == '"') {
 					estado = 29;
@@ -165,15 +201,11 @@ public class Compilador {
 					// estado = 1;
 					return tabelaSimbolos.token("+", Tag.RELOP_SUM, n_line, n_column);
 				} 
-				else if (c == ')') {
-					estado = 15;
-				} 
 				else if( c == '=') {
 					return tabelaSimbolos.token("=", Tag.RELOP_SUM, n_line, n_column);
 				}
 				else {
-					sinalizaErro("Caractere invalido " + c + " na linha " + n_line + " e coluna " + n_column);
-					return null;
+					sinalizaErro("Caractere invalido '" + c + "'.\n\tLinha " + n_line + "\t coluna " + n_column, estado);
 				}
 				break;
 			case 4:
@@ -204,22 +236,32 @@ public class Compilador {
 					return tabelaSimbolos.token("<", Tag.RELOP_LT, n_line, n_column);
 				}
 				break;
+				
 			case 6:
-				if (c == '=') {
+				if(c == '=') {
 					// estado = 7;
-					return new Token(Tag.RELOP_LE, "<=", n_line, n_column);
+					return tabelaSimbolos.token("<=", Tag.RELOP_LE, n_line, n_column);
 				} else {
 					// estado = 8;
 					retornaPonteiro();
-					return new Token(Tag.RELOP_LT, "<", n_line, n_column);
+					return tabelaSimbolos.token( "<", Tag.RELOP_LT,n_line, n_column);
 				}
+//				break;
 			case 8:		//Tratamento modo Panico
 				if (c == '-') {
 					// Estado Q9;
 					return tabelaSimbolos.token("<--", Tag.RELOP_ASSIGN, n_line, n_column);
 				}
-				sinalizaErro("Esperado '-' mas recebeu " + c + "\n\tLinha: " + n_line + "\tColuna: " + n_column);
+				else if(c == '\n') {
+					proxLinha();
+				}
+				else if(lookahead == END_OF_FILE) {
+					sinalizaErro("Esperado '-' mas recebeu FIM DE ARQUIVO.\n\tLinha: " + n_line + "\tColuna: " + n_column, 998);
+					return null;
+				}
+				sinalizaErro("Esperado '-' mas recebeu '" + c + "'\n\tLinha: " + n_line + "\tColuna: " + n_column, estado);
 				break;
+			
 			case 11:
 				if (c == '=') {
 					// estado = 12;
@@ -230,15 +272,7 @@ public class Compilador {
 					retornaPonteiro();
 					return tabelaSimbolos.token( ">",Tag.RELOP_GT, n_line, n_column);
 				}
-			case 15:
-				if (c == '=') {
-					// estado = 16;
-					return new Token(Tag.RELOP_NE, "!=", n_line, n_column);
-				} else {
-					retornaPonteiro();
-					sinalizaErro("Token incompleto para o caractere [!] na linha " + n_line + " e coluna " + n_column);
-					return null;
-				}
+//				break;
 			case 17:
 				if (Character.isLetterOrDigit(c)) {
 					lexema.append(c);
@@ -246,16 +280,15 @@ public class Compilador {
 				} else {
 					// estado = 18;
 					retornaPonteiro();
-					return new Token(Tag.ID, lexema.toString(), n_line, n_column);
+					return tabelaSimbolos.token(lexema.toString(), Tag.ID, n_line, n_column);
 				}
 				break;
 			case 18:
 				if (c == '\n' || c == '\r') {
-					//Reinicia o automato
-					this.n_line++;
+					proxLinha();
 				}
 				else if(c == '\t') {
-					this.n_column += 3;
+					n_column += 3;
 				}
 				else if(c == '*') {
 					estado = 180;
@@ -272,7 +305,7 @@ public class Compilador {
 			case 19:
 				if (c == '\n' || c == '\r') {
 					//Reinicia o automato
-					this.n_line++;
+					proxLinha();
 					estado = 0;
 				}
 				break;
@@ -288,7 +321,7 @@ public class Compilador {
 					estado = 22;
 				} else {
 					retornaPonteiro();
-					sinalizaErro("Padrao para [ConstNumDouble] invalido na linha " + n_line + " coluna " + n_column);
+					sinalizaErro("Padrao para [ConstNumDouble] invalido na linha " + n_line + " coluna " + n_column, estado);
 					return null;
 				}
 				break;
@@ -305,34 +338,29 @@ public class Compilador {
 				else {
 					// estado Q26
 					retornaPonteiro();
-					return new Token(Tag.TP_NUMERICO, lexema.toString(), n_line, n_column);
+					return tabelaSimbolos.token(lexema.toString(), Tag.TP_NUMERICO, n_line, n_column);
 				}
 				break;
 			case 24:
+				if(!Character.isDigit(c)) {
+					sinalizaErro("Esperado um digito, mas recebeu '" + c + "'\n\tLinha: " + n_line + "\tColuna: "+n_column, estado);
+				}
+				else {
+					lexema.append(c);
+					estado = 25;
+				}
+				break;
+			case 25:
 				if(Character.isDigit(c)) {
 					lexema.append(c);
 				}
 				else {
-					// estado Q26
+					//Estado Q26
 					retornaPonteiro();
-					return new Token(Tag.TP_NUMERICO, lexema.toString(), n_line, n_column);
+					return tabelaSimbolos.token(lexema.toString(), Tag.TP_NUMERICO, n_line, n_column);
 				}
 				break;
-//			case 25:
-//				if (c == '"') {
-//					// estado = 26;
-//					return new Token(Tag.TP_LITERAL, lexema.toString(), n_line, n_column);
-//				} else if (c == '\n') {
-//					sinalizaErro("Padrao para [ConstString] invalido na linha " + n_line + " coluna " + n_column);
-//					return null;
-//				} else if (lookahead == END_OF_FILE) {
-//					sinalizaErro("String deve ser fechada com \" antes do fim de arquivo");
-//					return null;
-//				} else {
-//					lexema.append(c);
-//					// permanece no estado 25
-//				}
-//				break;
+				
 			case 27:
 				if (Character.isLetterOrDigit(c) || Character.isDigit(c)) {
 					lexema.append(c);
@@ -345,7 +373,7 @@ public class Compilador {
 			case 29:
 				if(c == '"') {
 					// Estado Q30
-					return tabelaSimbolos.token(lexema.toString(), Tag.ID, n_line, n_column);
+					return tabelaSimbolos.token(lexema.toString(), Tag.TP_LITERAL, n_line, n_column);
 				}
 				lexema.append(c);
 				break;
@@ -365,7 +393,7 @@ public class Compilador {
 
 	public static void main(String[] args) {
 		Compilador lexer = new Compilador(
-				"E:\\Projetos\\compiler\\src\\fntPortugolo\\primeiro_portugolo.ptgl");
+				"/home/breno/projetos_outros/compilers/src/fntPortugolo/primeiro_portugolo.ptgl");
 		Token token;
 		tabelaSimbolos = new TS();
 
@@ -387,5 +415,6 @@ public class Compilador {
 		System.out.println("");
 		System.out.println("Tabela de simbolos:");
 		System.out.println(tabelaSimbolos.toString());
+		resumoCompilador();
 	}
 }
