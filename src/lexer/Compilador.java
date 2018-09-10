@@ -10,14 +10,9 @@ public class Compilador {
 	public static int n_column = 1; // contador de linhas
 	private RandomAccessFile instance_file; // referencia para o arquivo
 	private static TS tabelaSimbolos; // tabela de simbolos
-<<<<<<< HEAD
 	private static int cod_erro = -1;
 	private static String msg_erro = "";
 	private static int num_erro = 0;
-=======
-	private static int n_erro = -1;
-	private static String msgImp = "";
->>>>>>> 5e2186c9dedd4d6fed39cad84fa9681925718365
 
 	public Compilador(String input_data) {
 
@@ -64,7 +59,6 @@ public class Compilador {
 	
 	
 	// Reporta erro para o usuário
-<<<<<<< HEAD
 	public void sinalizaErro(String mensagem,int codErro) {
  
 		// 998	→ Erro de fim de arquivo inesperado
@@ -88,24 +82,6 @@ public class Compilador {
 			num_erro ++;
 			System.out.println("\n\n" + mensagem + "\n\n");
 		}
-=======
-	public void sinalizaErro(String mensagem) {
-		if (n_erro < 0) {
-			if(mensagem != msgImp) {
-				n_erro ++;
-				msgImp = mensagem;
-				System.out.println("[Erro Lexico]: " + mensagem + "\n");
-			}
-			else if(n_erro == 0 && !mensagem.equals(msgImp) && !mensagem.equals("")) {
-				msgImp = mensagem;
-				System.out.println("[Erro Lexico]: " + mensagem + "\n");
-			
-			}
-		}
-			if(n_erro > -1 && mensagem.equals("")) {
-				n_erro = -1;
-			}
->>>>>>> 5e2186c9dedd4d6fed39cad84fa9681925718365
 		
 	}
 
@@ -229,12 +205,7 @@ public class Compilador {
 					return tabelaSimbolos.token("=", Tag.RELOP_SUM, n_line, n_column);
 				}
 				else {
-<<<<<<< HEAD
 					sinalizaErro("Caractere invalido '" + c + "'.\n\tLinha " + n_line + "\t coluna " + n_column, estado);
-=======
-					sinalizaErro("Caractere invalido " + c + " na linha " + n_line + " e coluna " + n_column);
-					//return null;
->>>>>>> 5e2186c9dedd4d6fed39cad84fa9681925718365
 				}
 				break;
 			case 4:
@@ -269,31 +240,18 @@ public class Compilador {
 			case 6:
 				if(c == '=') {
 					// estado = 7;
-<<<<<<< HEAD
 					return tabelaSimbolos.token("<=", Tag.RELOP_LE, n_line, n_column);
 				} else {
 					// estado = 8;
 					retornaPonteiro();
 					return tabelaSimbolos.token( "<", Tag.RELOP_LT,n_line, n_column);
-=======
-					return tabelaSimbolos.token("<=", Tag.RELOP_LE, n_line, n_column);					
-				} else {
-					// estado = 8;
-					retornaPonteiro();
-					return tabelaSimbolos.token("<", Tag.RELOP_LE, n_line, n_column);
-					
->>>>>>> 5e2186c9dedd4d6fed39cad84fa9681925718365
 				}
 //				break;
 			case 8:		//Tratamento modo Panico
 				if (c == '-') {
 					// Estado Q9;
 					return tabelaSimbolos.token("<--", Tag.RELOP_ASSIGN, n_line, n_column);
-				} else if (END_OF_FILE == -1) {
-					sinalizaErro("Fim de arquivo!\nEsperado '-' mas recebeu " + c + "\n\tLinha: " + n_line + "\tColuna: " + n_column);
-					return null;
 				}
-<<<<<<< HEAD
 				else if(c == '\n') {
 					proxLinha();
 				}
@@ -302,10 +260,6 @@ public class Compilador {
 					return null;
 				}
 				sinalizaErro("Esperado '-' mas recebeu '" + c + "'\n\tLinha: " + n_line + "\tColuna: " + n_column, estado);
-=======
-				
-				sinalizaErro("Esperado '-' mas recebeu " + c + "\n\tLinha: " + n_line + "\tColuna: " + n_column);
->>>>>>> 5e2186c9dedd4d6fed39cad84fa9681925718365
 				break;
 			
 			case 11:
@@ -384,11 +338,7 @@ public class Compilador {
 				else {
 					// estado Q26
 					retornaPonteiro();
-<<<<<<< HEAD
 					return tabelaSimbolos.token(lexema.toString(), Tag.TP_NUMERICO, n_line, n_column);
-=======
-					return tabelaSimbolos.token(lexema.toString(),Tag.NUMERICO, n_line, n_column);					
->>>>>>> 5e2186c9dedd4d6fed39cad84fa9681925718365
 				}
 				break;
 			case 24:
@@ -407,11 +357,7 @@ public class Compilador {
 				else {
 					//Estado Q26
 					retornaPonteiro();
-<<<<<<< HEAD
 					return tabelaSimbolos.token(lexema.toString(), Tag.TP_NUMERICO, n_line, n_column);
-=======
-					return tabelaSimbolos.token(lexema.toString(),Tag.NUMERICO, n_line, n_column);
->>>>>>> 5e2186c9dedd4d6fed39cad84fa9681925718365
 				}
 				break;
 				
@@ -427,11 +373,7 @@ public class Compilador {
 			case 29:
 				if(c == '"') {
 					// Estado Q30
-<<<<<<< HEAD
 					return tabelaSimbolos.token(lexema.toString(), Tag.TP_LITERAL, n_line, n_column);
-=======
-					return tabelaSimbolos.token(lexema.toString(), Tag.LITERAL, n_line, n_column);
->>>>>>> 5e2186c9dedd4d6fed39cad84fa9681925718365
 				}
 				lexema.append(c);
 				break;

@@ -1,22 +1,13 @@
 algoritmo
 	declare 
 	op literal;
-<<<<<<< HEAD
 	num numerico;
-=======
-	ab numerico;
-	cd logico;
-	ef nulo;
-	
->>>>>>> 5e2186c9dedd4d6fed39cad84fa9681925718365
 // linha
-
 	escreva("Vc prefere Goku ou Vegeta? Informe G ou V: ");
 	leia(op);
 	se(op = "G") inicio 
 	   escreva("Oi, eu sou o Goku!");
 	fim 
-<<<<<<< HEAD
 	senao inicio
 	/*Multi linha
 	  multi linha */
@@ -28,8 +19,3 @@ fim algoritmo
 subrotina fazNada(v1 nulo)
 	escreva("Se a rotina faz nada, por que tem um comando de impressao?");
 fim subrotina
-=======
-	
-	senao se((10 > 1.22) ou 10 < 15.5.2) inicio
-		cd <- verdadeiro	
->>>>>>> 5e2186c9dedd4d6fed39cad84fa9681925718365
