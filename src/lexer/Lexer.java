@@ -2,7 +2,7 @@ package lexer;
 
 import java.io.*;
 
-public class Compilador {
+public class Lexer {
 
 	private static final int END_OF_FILE = -1; // contante para fim do arquivo
 	private static int lookahead = 0; // armazena o último caractere lido do arquivo
@@ -14,8 +14,8 @@ public class Compilador {
 	private static String msg_erro = "";
 	private static int num_erro = 0;
 
-	public Compilador(String input_data) {
-
+	public Lexer(String input_data) {
+		tabelaSimbolos = new TS();
 		// Abre instance_file de input_data
 		try {
 			instance_file = new RandomAccessFile(input_data, "r");
@@ -385,36 +385,5 @@ public class Compilador {
 	 * @param args the command line arguments
 	 */
 
-	// breno - Trampo →
-	// /home/breno/projetos_outros/compilers/src/fntPortugolo/primeiro_portugolo.ptgl
 	
-	// Renato - Pessoal
-	// E:\Projetos\compiler\src\fntPortugolo\primeiro_portugolo.ptgl
-
-	public static void main(String[] args) {
-		Compilador lexer = new Compilador(
-				"/home/breno/projetos_outros/compilers/src/fntPortugolo/primeiro_portugolo.ptgl");
-		Token token;
-		tabelaSimbolos = new TS();
-
-		// Enquanto nao houver erros ou nao for fim de arquivo:
-		do {
-			token = lexer.proxToken();
-
-			// Imprime token
-			if (token != null) {
-				System.out.println(
-						"Token: " + token.toString() + "\n\t Linha: " + n_line + "\t Coluna: " + n_column + "");
-			}
-
-		} while (token != null && token.getClasse() != Tag.EOF);
-
-		lexer.fechaArquivo();
-
-		// Imprime a tabela de simbolos
-		System.out.println("");
-		System.out.println("Tabela de simbolos:");
-		System.out.println(tabelaSimbolos.toString());
-		resumoCompilador();
-	}
 }

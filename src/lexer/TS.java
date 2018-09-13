@@ -115,12 +115,14 @@ public class TS {
     public Token token(String lexema, Tag tag, int n_lin, int n_col) {
     	Token token;
     	token = this.retornaToken(lexema);
-    		if(token == null) {
-    			token = new Token(tag,lexema,n_lin,n_col);
+    	
+    	if(token == null) {
+    		token = new Token(tag,lexema,n_lin,n_col);
+    		if(token.getClasse().equals(Tag.ID) || token.getClasse().equals(Tag.KW)) {
     			this.tabelaSimbolos.put(lexema, token);
     		}
-    	token.setColuna(n_col);
-    	token.setLinha(n_lin);
+    	}
+    
     	return token;
     }
     
