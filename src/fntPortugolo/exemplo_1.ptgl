@@ -21,3 +21,7 @@ algoritmo
    	fim
    	escreva "ef", ef
 fim algoritmo
+subrotina funcao
+inicio
+	a <-- b
+fim
