@@ -4,15 +4,15 @@ import java.io.*;
 
 public class Lexer {
 
-	private static final int END_OF_FILE = -1; // contante para fim do arquivo
-	private static int lookahead = 0; // armazena o último caractere lido do arquivo
-	public static int n_line = 1; // contador de linhas
-	public static int n_column = 1; // contador de linhas
+	private final int END_OF_FILE = -1; // contante para fim do arquivo
+	private int lookahead = 0; // armazena o último caractere lido do arquivo
+	public int n_line = 1; // contador de linhas
+	public int n_column = 1; // contador de linhas
 	private RandomAccessFile instance_file; // referencia para o arquivo
-	private static TS tabelaSimbolos; // tabela de simbolos
-	private static int cod_erro = -1;
-	private static String msg_erro = "";
-	private static int num_erro = 0;
+	private TS tabelaSimbolos; // tabela de simbolos
+	private int cod_erro = -1;
+	private String msg_erro = "";
+	private int num_erro = 0;
 
 	public Lexer(String input_data) {
 		tabelaSimbolos = new TS();
@@ -48,7 +48,7 @@ public class Lexer {
 
 	
 	//
-	public static void resumoCompilador() {
+	public void resumoCompilador() {
 		if(num_erro > 0) {
 			System.out.println("Encontrado(os): " + num_erro + " erro(os).");
 		}

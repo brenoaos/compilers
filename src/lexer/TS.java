@@ -8,7 +8,7 @@ public class TS {
     private HashMap<String, Token> tabelaSimbolos; // Tabela de símbolos do ambiente
 
     public TS() {
-        tabelaSimbolos = new HashMap();
+        tabelaSimbolos = new HashMap<String, Token>();
 
         // Inserindo as palavras reservadas
         Token word;
