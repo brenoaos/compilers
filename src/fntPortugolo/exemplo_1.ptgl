@@ -20,12 +20,10 @@ algoritmo
 		escreva "A"
    	fim
    	escreva "ef", ef
-<<<<<<< HEAD
 fim algoritmo
-=======
+
 fim algoritmo
 subrotina funcao
 inicio
 	a <-- b
 fim
->>>>>>> 3a73412b7af120c48f9487ea4f0599e3dad5f289
