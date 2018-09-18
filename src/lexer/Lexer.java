@@ -4,17 +4,6 @@ import java.io.*;
 
 public class Lexer {
 
-<<<<<<< HEAD
-	private static final int END_OF_FILE = -1; // contante para fim do arquivo
-	private static int lookahead = 0; // armazena o último caractere lido do arquivo
-	public static int n_line = 1; // contador de linhas
-	public static int n_column = 1; // contador de linhas
-	private RandomAccessFile instance_file; // referencia para o arquivo
-	private static TS tabelaSimbolos; // tabela de simbolos
-	private static int cod_erro = -1;
-	private static String msg_erro = "";
-	private static int num_erro = 0;
-=======
 	private final int END_OF_FILE = -1; // contante para fim do arquivo
 	private int lookahead = 0; // armazena o último caractere lido do arquivo
 	public int n_line = 1; // contador de linhas
@@ -23,8 +12,7 @@ public class Lexer {
 	private TS tabelaSimbolos; // tabela de simbolos
 	private int cod_erro = -1;
 	private String msg_erro = "";
-	private int num_erro = 0;
->>>>>>> 3a73412b7af120c48f9487ea4f0599e3dad5f289
+	private static int num_erro = 0;
 
 	public Lexer(String input_data) {
 		tabelaSimbolos = new TS();
@@ -39,7 +27,7 @@ public class Lexer {
 			System.exit(2);
 		}
 	}
-	
+
 	// Fecha instance_file de input_data
 	public void fechaArquivo() {
 
@@ -50,55 +38,47 @@ public class Lexer {
 			System.exit(3);
 		}
 	}
-	
-	//Controle de ponteiro
-	//Soma linha e retorna coluna 
+
+	// Controle de ponteiro
+	// Soma linha e retorna coluna
 	public void proxLinha() {
-		n_line ++;
+		n_line++;
 		n_column = 1;
 	}
 
-	
 	//
-<<<<<<< HEAD
 	public static void resumoCompilador() {
-=======
-	public void resumoCompilador() {
->>>>>>> 3a73412b7af120c48f9487ea4f0599e3dad5f289
-		if(num_erro > 0) {
+		if (num_erro > 0) {
 			System.out.println("Encontrado(os): " + num_erro + " erro(os).");
-		}
-		else {
+		} else {
 			System.out.println("Compilado com sucesso!");
 		}
 	}
-	
-	
+
 	// Reporta erro para o usuário
-	public void sinalizaErro(String mensagem,int codErro) {
- 
-		// 998	→ Erro de fim de arquivo inesperado
-		// 999	→ Reset
-		
-		if(codErro != cod_erro && codErro != 999) {
-			if(!mensagem.equals(msg_erro)) {
+	public void sinalizaErro(String mensagem, int codErro) {
+
+		// 998 → Erro de fim de arquivo inesperado
+		// 999 → Reset
+
+		if (codErro != cod_erro && codErro != 999) {
+			if (!mensagem.equals(msg_erro)) {
 				msg_erro = mensagem;
 				cod_erro = codErro;
-				num_erro ++;
+				num_erro++;
 				System.out.println("\n\n" + mensagem + "\n\n");
 			}
-		}
-		else if(codErro == 999) {
+		} else if (codErro == 999) {
 			cod_erro = codErro;
 			msg_erro = "";
 		}
-		
-		if(codErro == 998 && cod_erro != codErro) {
+
+		if (codErro == 998 && cod_erro != codErro) {
 			cod_erro = codErro;
-			num_erro ++;
+			num_erro++;
 			System.out.println("\n\n" + mensagem + "\n\n");
 		}
-		
+
 	}
 
 	// Volta uma posição do buffer de leitura
@@ -119,12 +99,12 @@ public class Lexer {
 	/*
 	 * //[1] Voce devera se preocupar quando incremetar as linhas e colunas, //
 	 * assim como quando decrementar ou reseta-las. //[2] Toda vez que voce
-	 * encontrar um lexema completo, voce deve retornar // um objeto tabelaSimbolos.token(Tag,
-	 * "lexema", linha, coluna). Cuidado com as // palavras reservadas que ja sao
-	 * cadastradas na TS. Essa consulta // voce devera fazer somente quando
-	 * encontrar um Identificador. //[3] Se o caractere lido nao casar com nenhum
-	 * caractere esperado, // apresentar a mensagem de erro na linha e coluna
-	 * correspondente.
+	 * encontrar um lexema completo, voce deve retornar // um objeto
+	 * tabelaSimbolos.token(Tag, "lexema", linha, coluna). Cuidado com as //
+	 * palavras reservadas que ja sao cadastradas na TS. Essa consulta // voce
+	 * devera fazer somente quando encontrar um Identificador. //[3] Se o caractere
+	 * lido nao casar com nenhum caractere esperado, // apresentar a mensagem de
+	 * erro na linha e coluna correspondente.
 	 * 
 	 */
 	// Obtém próximo token: esse metodo simula um AFD
@@ -133,10 +113,10 @@ public class Lexer {
 		StringBuilder lexema = new StringBuilder();
 		int estado = 0;
 		char c;
-		
-		//recupera de um erro
-		sinalizaErro("",999);
-		
+
+		// recupera de um erro
+		sinalizaErro("", 999);
+
 		while (true) {
 			c = '\u0000'; // null char
 			// avanca caractere ou retorna token
@@ -158,137 +138,119 @@ public class Lexer {
 			// estado 1
 			case 0:
 				if (lookahead == END_OF_FILE)
-					return tabelaSimbolos.token("EOF",Tag.EOF, n_line, n_column);
-				
+					return tabelaSimbolos.token("EOF", Tag.EOF, n_line, n_column);
+
 				else if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
 					// Permance no estado = 0
 					estado = 0;
 					if (c == '\n' || c == '\r') {
-						proxLinha();
-					}
-					else if(c == '\t') {
+						this.proxLinha();
+					} 
+					else if (c == '\t') {
 						n_column += 3;
 					}
-				} 
-				else if (Character.isLetter(c)) {
+				} else if (Character.isLetter(c)) {
 					lexema.append(c);
 					estado = 27;
-				} 
-				else if (Character.isDigit(c)) {
+				} else if (Character.isDigit(c)) {
 					lexema.append(c);
 					estado = 22;
-				} 
-				else if (c == '<') {
+				} else if (c == '<') {
 					estado = 5;
-				} 
-				else if (c == '>') {
+				} else if (c == '>') {
 					estado = 11;
-				} 
-				else if (c == '(') {
-					//estado Q14;
+				} else if (c == '(') {
+					// estado Q14;
 					return tabelaSimbolos.token("(", Tag.SMB_OP, n_line, n_column);
-				} 
-				else if (c == ')') {
-					//estado Q15;
+				} else if (c == ')') {
+					// estado Q15;
 					return tabelaSimbolos.token(")", Tag.SMB_CP, n_line, n_column);
-				} 
-				else if (c == ';') {
-					//estado Q16;
+				} else if (c == ';') {
+					// estado Q16;
 					return tabelaSimbolos.token(";", Tag.SMB_SEMICOLON, n_line, n_column);
-				} 
-				else if (c == ',') {
-					//estado Q17;
+				} else if (c == ',') {
+					// estado Q17;
 					return tabelaSimbolos.token(",", Tag.SMB_COMMA, n_line, n_column);
-				} 
-				else if (c == '"') {
+				} else if (c == '"') {
 					estado = 29;
-				} 
-				else if (c == '/') {
+				} else if (c == '/') {
 					estado = 4;
-				} 
-				else if (c == '*') {
+				} else if (c == '*') {
 					estado = 3;
-				} 
-				else if (c == '-') {
+				} else if (c == '-') {
 					estado = 2;
-				} 
-				else if (c == '+') {
+				} else if (c == '+') {
 					// Q1 será inibido por não ter um derivação a partir do simbolo encontrado
 					// estado = 1;
 					return tabelaSimbolos.token("+", Tag.RELOP_SUM, n_line, n_column);
-				} 
-				else if( c == '=') {
+				} else if (c == '=') {
 					return tabelaSimbolos.token("=", Tag.RELOP_SUM, n_line, n_column);
-				}
-				else {
-					sinalizaErro("Caractere invalido '" + c + "'.\n\tLinha " + n_line + "\t coluna " + n_column, estado);
+				} else {
+					sinalizaErro("Caractere invalido '" + c + "'.\n\tLinha " + n_line + "\t coluna " + n_column,
+							estado);
 				}
 				break;
 			case 4:
-				if(c == '/') {
+				if (c == '/') {
 					estado = 19;
-				}
-				else if(c == '*') {
+				} else if (c == '*') {
 					estado = 18;
-				}
-				else {
+				} else {
 					return tabelaSimbolos.token("/", Tag.RELOP_DIV, n_line, n_column);
 				}
 				break;
 			case 5:
-				if(c == '=') {
-					//Estado Q6
+				if (c == '=') {
+					// Estado Q6
 					return tabelaSimbolos.token("<=", Tag.RELOP_LE, n_line, n_column);
-				}
-				else if(c == '>') {
-					//Estado Q7
+				} else if (c == '>') {
+					// Estado Q7
 					return tabelaSimbolos.token("<>", Tag.RELOP_NE, n_line, n_column);
-				}
-				else if(c == '-') {
+				} else if (c == '-') {
 					estado = 8;
-				}
-				else {
+				} else {
 					this.retornaPonteiro();
 					return tabelaSimbolos.token("<", Tag.RELOP_LT, n_line, n_column);
 				}
 				break;
-				
+
 			case 6:
-				if(c == '=') {
+				if (c == '=') {
 					// estado = 7;
 					return tabelaSimbolos.token("<=", Tag.RELOP_LE, n_line, n_column);
 				} else {
 					// estado = 8;
 					retornaPonteiro();
-					return tabelaSimbolos.token( "<", Tag.RELOP_LT,n_line, n_column);
+					return tabelaSimbolos.token("<", Tag.RELOP_LT, n_line, n_column);
 				}
-//				break;
-			case 8:		//Tratamento modo Panico
+				// break;
+			case 8: // Tratamento modo Panico
 				if (c == '-') {
 					// Estado Q9;
 					return tabelaSimbolos.token("<--", Tag.RELOP_ASSIGN, n_line, n_column);
-				}
-				else if(c == '\n') {
+				} else if (c == '\n') {
 					proxLinha();
-				}
-				else if(lookahead == END_OF_FILE) {
-					sinalizaErro("Esperado '-' mas recebeu FIM DE ARQUIVO.\n\tLinha: " + n_line + "\tColuna: " + n_column, 998);
+				} else if (lookahead == END_OF_FILE) {
+					sinalizaErro(
+							"Esperado '-' mas recebeu FIM DE ARQUIVO.\n\tLinha: " + n_line + "\tColuna: " + n_column,
+							998);
 					return null;
 				}
-				sinalizaErro("Esperado '-' mas recebeu '" + c + "'\n\tLinha: " + n_line + "\tColuna: " + n_column, estado);
+				sinalizaErro("Esperado '-' mas recebeu '" + c + "'\n\tLinha: " + n_line + "\tColuna: " + n_column,
+						estado);
 				break;
-			
+
 			case 11:
 				if (c == '=') {
 					// estado = 12;
-					return tabelaSimbolos.token( ">=",Tag.RELOP_GE, n_line, n_column);
-					
+					return tabelaSimbolos.token(">=", Tag.RELOP_GE, n_line, n_column);
+
 				} else {
 					// estado = 13;
 					retornaPonteiro();
-					return tabelaSimbolos.token( ">",Tag.RELOP_GT, n_line, n_column);
+					return tabelaSimbolos.token(">", Tag.RELOP_GT, n_line, n_column);
 				}
-//				break;
+				// break;
 			case 17:
 				if (Character.isLetterOrDigit(c)) {
 					lexema.append(c);
@@ -302,32 +264,29 @@ public class Lexer {
 			case 18:
 				if (c == '\n' || c == '\r') {
 					proxLinha();
-				}
-				else if(c == '\t') {
+				} else if (c == '\t') {
 					n_column += 3;
-				}
-				else if(c == '*') {
+				} else if (c == '*') {
 					estado = 180;
 				}
 				break;
 			case 180:
-				if(c == '/') {
+				if (c == '/') {
 					estado = 0;
-				}
-				else {
+				} else {
 					estado = 18;
 				}
 				break;
 			case 19:
 				if (c == '\n' || c == '\r') {
-					//Reinicia o automato
+					// Reinicia o automato
 					proxLinha();
 					estado = 0;
 				}
 				break;
 			case 20:
 				if (c == '/') {
-					//Reinicia o automato
+					// Reinicia o automato
 					estado = 0;
 				}
 				break;
@@ -337,7 +296,8 @@ public class Lexer {
 					estado = 22;
 				} else {
 					retornaPonteiro();
-					sinalizaErro("Padrao para [ConstNumDouble] invalido na linha " + n_line + " coluna " + n_column, estado);
+					sinalizaErro("Padrao para [ConstNumDouble] invalido na linha " + n_line + " coluna " + n_column,
+							estado);
 					return null;
 				}
 				break;
@@ -345,38 +305,36 @@ public class Lexer {
 				if (Character.isDigit(c)) {
 					lexema.append(c);
 					// permanece no estado 22
-				} 
-				else if(c == '.'){
+				} else if (c == '.') {
 					lexema.append(c);
 					estado = 24;
 					// vai para o estado 24
-				}
-				else {
+				} else {
 					// estado Q26
 					retornaPonteiro();
 					return tabelaSimbolos.token(lexema.toString(), Tag.TP_NUMERICO, n_line, n_column);
 				}
 				break;
 			case 24:
-				if(!Character.isDigit(c)) {
-					sinalizaErro("Esperado um digito, mas recebeu '" + c + "'\n\tLinha: " + n_line + "\tColuna: "+n_column, estado);
-				}
-				else {
+				if (!Character.isDigit(c)) {
+					sinalizaErro(
+							"Esperado um digito, mas recebeu '" + c + "'\n\tLinha: " + n_line + "\tColuna: " + n_column,
+							estado);
+				} else {
 					lexema.append(c);
 					estado = 25;
 				}
 				break;
 			case 25:
-				if(Character.isDigit(c)) {
+				if (Character.isDigit(c)) {
 					lexema.append(c);
-				}
-				else {
-					//Estado Q26
+				} else {
+					// Estado Q26
 					retornaPonteiro();
 					return tabelaSimbolos.token(lexema.toString(), Tag.TP_NUMERICO, n_line, n_column);
 				}
 				break;
-				
+
 			case 27:
 				if (Character.isLetterOrDigit(c) || Character.isDigit(c)) {
 					lexema.append(c);
@@ -385,9 +343,9 @@ public class Lexer {
 					this.retornaPonteiro();
 					return tabelaSimbolos.token(lexema.toString(), Tag.ID, n_line, n_column);
 				}
-        	   break;
+				break;
 			case 29:
-				if(c == '"') {
+				if (c == '"') {
 					// Estado Q30
 					return tabelaSimbolos.token(lexema.toString(), Tag.TP_LITERAL, n_line, n_column);
 				}
@@ -401,5 +359,4 @@ public class Lexer {
 	 * @param args the command line arguments
 	 */
 
-	
 }

@@ -1,6 +1,6 @@
 algoritmo
-   declare ab, cd, ef numerico
-   escreva "Valor para 'ab'"
+	declare ab, cd, ef numerico
+	escreva "Valor para 'ab'"
    leia ab
    
    se ab < 10

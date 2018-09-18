@@ -1,11 +1,11 @@
 package lexer;
 
 public class Compilador {
-		
-	//E:\Projetos\compiler\src\fntPortugolo\exemplo_1.ptgl
-	
+
+	// E:\Projetos\compiler\src\fntPortugolo\exemplo_1.ptgl
+	// /home/breno/projetos_outros/compilers/src/fntPortugolo
 	public static void main(String[] args) {
-		Lexer lexer = new Lexer("E:\\Projetos\\compiler\\src\\fntPortugolo\\exemplo_1.ptgl");
+		Lexer lexer = new Lexer("/home/breno/projetos_outros/compilers/src/fntPortugolo/primeiro_portugolo.ptgl");
 		Token token;
 		TS tabelaSimbolos = new TS();
 
@@ -15,8 +15,8 @@ public class Compilador {
 
 			// Imprime token
 			if (token != null) {
-				System.out.println(
-						"Token: " + token.toString() + "\n\t Linha: " + lexer.n_line + "\t Coluna: " + lexer.n_column + "");
+				System.out.println("Token: " + token.toString() + "\n\t Linha: " + lexer.n_line + "\t Coluna: "
+						+ lexer.n_column + "");
 			}
 
 		} while (token != null && token.getClasse() != Tag.EOF);
