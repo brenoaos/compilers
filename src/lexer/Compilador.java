@@ -1,8 +1,7 @@
 package lexer;
 
-import java.io.*;
-
 public class Compilador {
+<<<<<<< HEAD
 
 	private static final int END_OF_FILE = -1; // contante para fim do arquivo
 	private static int lookahead = 0; // armazena o último caractere lido do arquivo
@@ -394,8 +393,13 @@ public class Compilador {
 	public static void main(String[] args) {
 		Compilador lexer = new Compilador(
 				"\\Projetos\\compiler\\src\\fntPortugolo\\primeiro_portugolo.ptgl");
+=======
+		
+	public static void main(String[] args) {
+		Lexer lexer = new Lexer("/home/breno/projetos_outros/compilers/src/fntPortugolo/exemplo_1.ptgl");
+>>>>>>> 3a73412b7af120c48f9487ea4f0599e3dad5f289
 		Token token;
-		tabelaSimbolos = new TS();
+		TS tabelaSimbolos = new TS();
 
 		// Enquanto nao houver erros ou nao for fim de arquivo:
 		do {
@@ -404,7 +408,7 @@ public class Compilador {
 			// Imprime token
 			if (token != null) {
 				System.out.println(
-						"Token: " + token.toString() + "\n\t Linha: " + n_line + "\t Coluna: " + n_column + "");
+						"Token: " + token.toString() + "\n\t Linha: " + lexer.n_line + "\t Coluna: " + lexer.n_column + "");
 			}
 
 		} while (token != null && token.getClasse() != Tag.EOF);
@@ -415,6 +419,10 @@ public class Compilador {
 		System.out.println("");
 		System.out.println("Tabela de simbolos:");
 		System.out.println(tabelaSimbolos.toString());
+<<<<<<< HEAD
 		resumoCompilador();
+=======
+		lexer.resumoCompilador();
+>>>>>>> 3a73412b7af120c48f9487ea4f0599e3dad5f289
 	}
 }
