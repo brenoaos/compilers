@@ -13,11 +13,11 @@ public class Lexer {
 	private int cod_erro = -1;
 	private String msg_erro = "";
 	private static int num_erro = 0;
-        
-        
-        public String tabSimbolos(){
-            return tabelaSimbolos.toString();
-        }
+  
+	public String tabSimbolos(){
+		return tabelaSimbolos.toString();
+	}
+	
 	public Lexer(String input_data) {
 		tabelaSimbolos = new TS();
 		// Abre instance_file de input_data
@@ -150,9 +150,9 @@ public class Lexer {
 					// Permance no estado = 0
 					estado = 0;
 					if (c == '\n' ) {
-                                            this.proxLinha();
+                        this.proxLinha();
 					} 
-                                        else if (c == '\r') {
+                        else if (c == '\r') {
                                            
 					} 
 					else if (c == '\t') {

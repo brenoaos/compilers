@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 algoritmo
 	declare ab, cd, ef numerico
 	escreva "Valor para 'ab'"
@@ -27,3 +28,34 @@ subrotina funcao
 inicio
 	a <-- b
 fim
+=======
+algoritmo
+	declare ab, cd, ef numerico
+	escreva "Valor para 'ab'"
+   leia ab
+   
+   se ab < 10
+   entao 
+   	inicio
+   		ab <-- 100
+   		escreva "agora ab recebeu 100"
+   	fim
+   senao 
+   	inicio
+   		escreva "Valor para 'cd'"
+   		leia cd
+   	fim 
+   
+   para ef <-- 1 ate (ab+cd) faca
+   	inicio
+		escreva "A"
+   	fim
+   	escreva "ef", ef
+fim algoritmo
+
+fim algoritmo
+subrotina funcao
+inicio
+	a <-- b
+fim
+>>>>>>> 0c19dfaec5a54b899bc3b21525d7ad95523c0285

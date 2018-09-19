@@ -12,7 +12,11 @@
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopOnEntry": false,
+<<<<<<< HEAD
             "mainClass": "",
+=======
+            "mainClass": "lexer.Compilador",
+>>>>>>> 0c19dfaec5a54b899bc3b21525d7ad95523c0285
             "args": "",
         }
     ]
