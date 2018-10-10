@@ -5,7 +5,7 @@ import lexer.Tag;
 public class Compilador {
 
 	// E:\Projetos\compilers\src\fntPortugolo
-	// /home/breno/projetos_outros/compilers/src/fntPortugolo
+	// /home/breno/projetos_outros/compilador/src/fntPortugolo
 
 	public static void main(String[] args) {
 		Lexer lexer = new Lexer("/home/breno/projetos_outros/compilers/src/fntPortugolo/primeiro_portugolo.ptgl");
