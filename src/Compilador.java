@@ -6,6 +6,7 @@ public class Compilador {
 
 	// E:\Projetos\compilador\src\fntPortugolo
 	// /home/breno/projetos_outros/compilers/src/fntPortugolo
+	// Teste commit
 
 	public static void main(String[] args) {
 		Lexer lexer = new Lexer("E:\\Projetos\\compilador\\src\\fntPortugolo\\primeiro_portugolo.ptgl");
