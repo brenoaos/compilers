@@ -2,6 +2,7 @@
 //
 //import java.io.*;
 //
+// testando isso aqui
 //public class Compilador_bck {
 //
 //	private static final int END_OF_FILE = -1; // contante para fim do arquivo
