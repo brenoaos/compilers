@@ -8,7 +8,7 @@ public class Compilador {
 	// /home/breno/projetos_outros/compilers/src/fntPortugolo
 
 	public static void main(String[] args) {
-		Lexer lexer = new Lexer("E:\Projetos\compilador\src\fntPortugolo\primeiro_portugolo.ptgl");
+		Lexer lexer = new Lexer("E:\\Projetos\\compilador\\src\\fntPortugolo\\primeiro_portugolo.ptgl");
 		Token token;
 
 		// Enquanto nao houver erros ou nao for fim de arquivo:
