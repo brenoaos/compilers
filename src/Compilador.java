@@ -4,11 +4,11 @@ import lexer.Tag;
 
 public class Compilador {
 
-	// E:\Projetos\compilers\src\fntPortugolo
-	// /home/breno/projetos_outros/compilador/src/fntPortugolo
+	// E:\Projetos\compilador\src\fntPortugolo
+	// /home/breno/projetos_outros/compilers/src/fntPortugolo
 
 	public static void main(String[] args) {
-		Lexer lexer = new Lexer("/home/breno/projetos_outros/compilers/src/fntPortugolo/primeiro_portugolo.ptgl");
+		Lexer lexer = new Lexer("E:\Projetos\compilador\src\fntPortugolo\primeiro_portugolo.ptgl");
 		Token token;
 
 		// Enquanto nao houver erros ou nao for fim de arquivo:
