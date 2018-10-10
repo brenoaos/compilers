@@ -51,7 +51,7 @@ public class Lexer {
 	}
 
 	//
-	public static void resumoCompilador() {
+	public void resumoCompilador() {
 		if (num_erro > 0) {
 			System.out.println("Encontrado(os): " + num_erro + " erro(os).");
 		} else {
