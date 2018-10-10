@@ -12,11 +12,12 @@ public enum Tag {
     RELOP_GE,       // 		>=
     RELOP_EQ,       // 		==
     RELOP_NE,       // 		!=
-    RELOP_ASSIGN,   // 		=
+    RELOP_ASSIGN,   // 		<--
     RELOP_SUM,      // 		+
     RELOP_MINUS,    // 		-
     RELOP_MULT,     // 		*
     RELOP_DIV,      // 		/
+    
     
     
     //COMENTARIOS
