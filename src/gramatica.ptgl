@@ -1,0 +1,23 @@
+Compilador 		→ Programa EOF
+Programa 		→ "algoritmo" ("declare" (DeclaraVar)+ )? ListaCmd "fim" "algoritmo" ListaRotina
+DeclaraVar 		→ ListaID Tipo ";"
+ListaRotina 	→ ListaRotina Rotina | ε
+Rotina 			→ "subrotina" ID "(" ListaParam ")" ("declare" (DeclaraVar)+ )? ListaCmd Retorno "fim" "subrotina"
+ListaParam 		→ Param "," ListaParam | Param
+Param 			→ ListaID Tipo
+ListaID 		→ ID "," ListaID | ID
+Retorno 		→ "retorne" Expressao | ε
+Tipo 			→ "logico" | "numerico" | "literal" | "nulo"
+ListaCmd 		→ ListaCmd Cmd | ε
+Cmd 			→ CmdSe | CmdEnquanto | CmdPara | CmdRepita | CmdAtrib | CmdChamaRotina | CmdEscreva | CmdLeia
+CmdSe 			→ "se" "(" Expressao ")" "inicio" ListaCmd "fim" | "se" "(" Expressao ")" "inicio" ListaCmd "fim" "senao" "inicio" ListaCmd "fim"
+CmdEnquanto 	→ "enquanto" "(" Expressao ")" "faca" "inicio" ListaCmd "fim"
+ComandoPara 	→ "para" CmdAtrib "ate" Expressao "faca" "inicio" ListaCmd "fim"
+ComandoRepita 	→ "repita" ListaCmd "ate" Expressao
+CmdAtrib 		→ ID "<--" Expressao ";"
+CmdChamaRotina 	→ ID "(" (Expressao ("," Expressao)∗)? ")" ";"
+CmdEscreva 		→ "escreva" "(" Expressao ")" ";"
+CmdLeia 		→ "leia" "(" ID ")" ";"
+Expressao 		→ Expressao Op Expressao | ID | ID "(" (Expressao ("," Expressao)∗ )? ")" | Numerico | Literal | "verdadeiro" | "falso" | OpUnario Expressao | "(" Expressao ")"
+Op 				→ "Ou" | "E" | "<" | "<=" | ">" | ">=" | "=" | "<>" | "/" | "*" | "-" | "+"
+OpUnario 		→ "Nao" 
