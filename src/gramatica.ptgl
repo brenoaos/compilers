@@ -23,7 +23,7 @@ CmdChamaRotina  →  ID "(" ExpChamaRotina ")" ";"
 ExpChamaRotina  →  Expressao ExpChamaRotina | "," Expressao ExpChamaRotina | ε  
 CmdEscreva      →  "escreva" "(" Expressao ")" ";"
 CmdLeia         →  "leia" "(" ID ")" ";"
-Expressao       →  Exp ExpSeg | ID TerExpressao | OpUnario Expressao | "(" Expressao ExpTer ")" 
+Expressao       →  Exp ExpSeg | ID ExpTer | OpUnario Expressao | "(" Expressao ExpTer ")" 
 ExpSeg          →  Op Exp | ε
 ExpTer          →  "," Expressao | ε
 Exp             →  Numerico | Literal | "verdadeiro" | "falso"
