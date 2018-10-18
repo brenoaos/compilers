@@ -20,18 +20,15 @@ ComandoPara     →  "para" CmdAtrib "ate" Expressao "faca" "inicio" ListaCmd "f
 ComandoRepita   →  "repita" ListaCmd "ate" Expressao
 CmdAtrib        →  ID "<--" Expressao ";"
 CmdChamaRotina  →  ID "(" ExpChamaRotina ")" ";"
-
 ExpChamaRotina  →  Expressao ExpChamaRotina | "," Expressao ExpChamaRotina | ε  
 CmdEscreva      →  "escreva" "(" Expressao ")" ";"
 CmdLeia         →  "leia" "(" ID ")" ";"
-
-Expressao       →  Exp ExpSeg | ID TerExpressao | OpUnario Expressao | "(" Expressao ")" 
-
+Expressao       →  Exp ExpSeg | ID TerExpressao | OpUnario Expressao | "(" Expressao ExpTer ")" 
 ExpSeg          →  Op Exp | ε
-
-TerExpressao    →  "(" (Expressao ("," Expressao)∗ )? ")" | ε
-
+ExpTer          →  "," Expressao | ε
 Exp             →  Numerico | Literal | "verdadeiro" | "falso"
-
-Op              →  "Ou" | "E" | "<" | "<=" | ">" | ">=" | "=" | "<>" | "/" | "*" | "-" | "+"
+Op              →  "Ou" | "E" | OpRel
+OpRel           →  "<" | "<=" | ">" | ">=" | "=" | "<>" | OpAritA
+OpAritA         →  "-" | "+" | OpAritB 
+OpAritB         →  "/" | "*" 
 OpUnario        →  "Nao"
