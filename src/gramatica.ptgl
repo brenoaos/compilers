@@ -35,37 +35,3 @@ Exp             →  Numerico | Literal | "verdadeiro" | "falso"
 
 Op              →  "Ou" | "E" | "<" | "<=" | ">" | ">=" | "=" | "<>" | "/" | "*" | "-" | "+"
 OpUnario        →  "Nao"
-
-
-
-Compilador      → Programa EOF
-Programa        → "algoritmo" Declara ListaCmd "fim" "algoritmo" ListaRotina
-Declara         → ("declare" (DeclaraVar)+ ) | ε 
-DeclaraVar      → ListaID Tipo ";"
-ListaRotina     → Funcao 
-Funcao          → Rotina ListaRotina | ε
-Rotina          → "subrotina" ID "(" ListaParam ")" ("declare" (DeclaraVar)+ )? ListaCmd Retorno "fim" "subrotina"
-ListaParam      → Param LstParam
-LstParam        → "," ListaParam | ε
-Param           → ListaID Tipo
-ListaID         → ID 
-LstID           → "," ListaID | ε
-Retorno         → "retorne" Expressao | ε
-Tipo            → "logico" | "numerico" | "literal" | "nulo"
-ListaCmd        → Cmd ListaCmd | ε
-Cmd             → CmdSe | CmdEnquanto | CmdPara | CmdRepita | CmdAtrib | CmdChamaRotina | CmdEscreva | CmdLeia
-CmdSe           → "se" "(" Expressao ")" "inicio" ListaCmd "fim" CmdSeSenao
-CmdSeSenao      → "senao" "inicio" ListaCmd "fim" |  ε
-CmdEnquanto     → "enquanto" "(" Expressao ")" "faca" "inicio" ListaCmd "fim"
-ComandoPara     → "para" CmdAtrib "ate" Expressao "faca" "inicio" ListaCmd "fim"
-ComandoRepita   → "repita" ListaCmd "ate" Expressao
-CmdAtrib        → ID "<--" Expressao ";"
-CmdChamaRotina  → ID "(" ExpChamaRotina ")" ";"
-ExpChamaRotina  → Expressao ExpChamaRotina | "," Expressao ExpChamaRotina | ε   
-CmdEscreva      → "escreva" "(" Expressao ")" ";"
-CmdLeia         → "leia" "(" ID ")" ";"
-Expressao       → Exp Expressao | Op Exp | OpUnario Exp| ID IDExp
-IDExp           → Exp | ε 
-Exp             → Numerico | Literal | "verdadeiro" | "falso"  | "(" Expressao ")" | ε 
-Op              → "Ou" | "E" | "<" | "<=" | ">" | ">=" | "=" | "<>" | "/" | "*" | "-" | "+"
-OpUnario        → "Nao"
