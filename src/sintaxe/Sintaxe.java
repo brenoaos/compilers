@@ -69,6 +69,7 @@ public class Sintaxe {
 			skip("Esperado \"algoritmo\", encontrado " + "\"" + token.getLexema() + "\"");
 		}		
 		
+		advance();
 		listaRotina();
 		
 		if ((token.getClasse() != Tag.EOF) && !token.getLexema().equals("EOF")) {
@@ -109,7 +110,7 @@ public class Sintaxe {
 	}
 	
 	public void listaRotina_() {
-		if (token.getClasse() == Tag.KW && (token.getLexema().equals("rotina"))){
+		if (token.getClasse() == Tag.KW && (token.getLexema().equals("subrotina"))){
 			advance();
 			rotina();
 			listaRotina_();
@@ -129,7 +130,7 @@ public class Sintaxe {
 		advance();
 		listaParam();
 		
-		if (token.getClasse() != Tag.SMB_OP && token.getLexema().equals(")")) {
+		if (token.getClasse() != Tag.SMB_CP && token.getLexema().equals(")")) {
 			skip("Esperad um ')', mas recebeu " + token.getLexema());
 		}
 		
@@ -256,13 +257,15 @@ public class Sintaxe {
 	public void cmdChamaRotina() {
 		regexExp();
 		
-		if (token.getClasse() != Tag.SMB_CP && (token.getLexema().equals(")"))){
+		if (token.getClasse() != Tag.SMB_CP && (!token.getLexema().equals(")"))){
 			skip("Esperando ')' ");
 		}
 		
+		advance();
 		if (token.getClasse() != Tag.SMB_SEMICOLON && (token.getLexema().equals(";"))){
 			skip("Esperando ';' ");
 		}	
+		advance();
 	}
 	
 	public void cmdAtrib() {
@@ -408,11 +411,10 @@ public class Sintaxe {
 	}
 	
 	public void opUnario() {
-		if((token.getClasse() != Tag.KW) && !token.getLexema().equals("Nao")){
-			skip("Expressao invalida 2");
+		if((token.getClasse() == Tag.KW) && token.getLexema().equals("Nao")){
+			advance();
+			expressao();	
 		}
-		advance();
-		expressao();		
 	}
 	
 	public void cmdSe() {

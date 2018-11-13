@@ -1,7 +1,7 @@
 algoritmo 
    declare
-   x, y numerico;
-   z logico;
+   numerico x, y;
+   logico z;
    
    escreva("informe um numero: ");
    leia(x);
