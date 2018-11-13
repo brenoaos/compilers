@@ -6,7 +6,7 @@ public class Compilador {
 	// /home/breno/projetos_outros/compilers/src/fntPortugolo
 
 	public static void main(String[] args) {
-		Lexer 	lexer = new Lexer("/home/breno/projetos_outros/compilers/src/fntPortugolo/teste1_portugolo.ptgl");
+		Lexer 	lexer = new Lexer("/home/breno/projetos_outros/compilers/src/fntPortugolo/teste2_portugolo.ptgl");
 		
 		new Sintaxe(lexer);
 		

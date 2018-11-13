@@ -293,6 +293,7 @@ public class Lexer {
 				if (c == '/') {
 					estado = 0;
 				} else {
+					retornaPonteiro();
 					estado = 18;
 				}
 				break;
@@ -367,6 +368,14 @@ public class Lexer {
 				if (c == '"') {
 					// Estado Q30
 					return tabelaSimbolos.token(lexema.toString(), Tag.TP_LITERAL, n_line, n_column);
+				}
+				else if(c == '\n') {
+					proxLinha();
+				}
+				else if (lookahead == END_OF_FILE) {
+					sinalizaErro("Esperado um literal mas encontrou EOF" + "'.\n\tLinha " + n_line + "\t coluna " + n_column, estado);
+					return tabelaSimbolos.token("EOF", Tag.EOF, n_line, n_column);
+//					return null;
 				}
 				lexema.append(c);
 				break;

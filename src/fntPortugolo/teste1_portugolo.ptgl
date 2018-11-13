@@ -9,6 +9,6 @@ fim algoritmo
 /** 
 * funcao faz nada
 **/ 
-subrotina fazNada(v1 nulo)
+subrotina fazNada(nulo v1)
    escreva("Se a rotina faz nada, por que tem um comando de impressao?");
 fim subrotina
