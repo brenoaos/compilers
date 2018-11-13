@@ -116,8 +116,6 @@ public class Lexer {
 
 		StringBuilder lexema = new StringBuilder();
 		int estado = 0;
-                //estado anterior
-                int estAnt = 0;
 		char c;
 
 		// recupera de um erro
@@ -187,16 +185,26 @@ public class Lexer {
 				} else if (c == '*') {
 					estado = 3;
 				} else if (c == '-') {
-					estado = 2;
+					return tabelaSimbolos.token("-", Tag.RELOP_MINUS, n_line, n_column);
 				} else if (c == '+') {
 					// Q1 será inibido por não ter um derivação a partir do simbolo encontrado
 					// estado = 1;
 					return tabelaSimbolos.token("+", Tag.RELOP_SUM, n_line, n_column);
 				} else if (c == '=') {
-					return tabelaSimbolos.token("=", Tag.RELOP_SUM, n_line, n_column);
+					return tabelaSimbolos.token("=", Tag.RELOP_EQ, n_line, n_column);
 				} else {
 					sinalizaErro("Caractere invalido '" + c + "'.\n\tLinha " + n_line + "\t coluna " + n_column,
 							estado);
+				}
+				break;
+			case 3:
+				if(c == '/') {
+					// Comentario
+					estado = 18;
+				}
+				else {
+					retornaPonteiro();
+					return tabelaSimbolos.token("*", Tag.RELOP_MULT, n_line, n_column);
 				}
 				break;
 			case 4:
