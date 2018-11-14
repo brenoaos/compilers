@@ -75,14 +75,14 @@ public class TS {
         word = new Token(Tag.KW, "falso", 0, 0);
         this.tabelaSimbolos.put("falso", word);
 
-        word = new Token(Tag.KW, "nao", 0, 0);
-        this.tabelaSimbolos.put("nao", word);
+        word = new Token(Tag.KW, "Nao", 0, 0);
+        this.tabelaSimbolos.put("Nao", word);
 
-        word = new Token(Tag.KW, "e", 0, 0);
-        this.tabelaSimbolos.put("e", word);
+        word = new Token(Tag.KW, "E", 0, 0);
+        this.tabelaSimbolos.put("E", word);
 
-        word = new Token(Tag.KW, "ou", 0, 0);
-        this.tabelaSimbolos.put("ou", word);
+        word = new Token(Tag.KW, "Ou", 0, 0);
+        this.tabelaSimbolos.put("Ou", word);
     }
 
     public void put(String s, Token w) {
@@ -115,6 +115,13 @@ public class TS {
                 this.tabelaSimbolos.put(lexema, token);
             }
         }
+        else {
+        	if (token.getClasse() == (Tag.KW) || token.getClasse()== (Tag.ID) ){
+        		token.setColuna(n_col);
+        		token.setLinha(n_lin);
+        	}
+        }
+        	
 
         return token;
     }
