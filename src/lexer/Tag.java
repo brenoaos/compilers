@@ -41,5 +41,29 @@ public enum Tag {
     TP_NULO,
  
     // palavra reservada
-    KW;
+     KW,
+	 KW_ALGORITMO,
+     KW_DECLARE,
+     KW_SUBROTINA,
+     KW_RETORNE,
+     KW_LOGICO,
+     KW_NUMERICO,
+     KW_LITERAL,
+     KW_NULO,
+     KW_SE,
+     KW_INICIO,
+     KW_FIM,
+     KW_SENAO,
+     KW_ENQUANTO,
+     KW_PARA,
+     KW_ATE,
+     KW_FACA,
+     KW_REPITA,
+     KW_ESCREVA,
+     KW_LEIA,
+     KW_VERDADEIRO,
+     KW_FALSO,
+     KW_NAO,
+     KW_E,
+     KW_OU;
 }

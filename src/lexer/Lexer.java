@@ -13,11 +13,12 @@ public class Lexer {
 	private int cod_erro = -1;
 	private String msg_erro = "";
 	private static int num_erro = 0;
-  
-	public String tabSimbolos(){
+	private boolean panico = false;
+
+	public String tabSimbolos() {
 		return tabelaSimbolos.toString();
 	}
-	
+
 	public Lexer(String input_data) {
 		tabelaSimbolos = new TS();
 		// Abre instance_file de input_data
@@ -60,29 +61,11 @@ public class Lexer {
 	}
 
 	// Reporta erro para o usuário
-	public void sinalizaErro(String mensagem, int codErro) {
-
-		// 998 → Erro de fim de arquivo inesperado
-		// 999 → Reset
-
-		if (codErro != cod_erro && codErro != 999) {
-			if (!mensagem.equals(msg_erro)) {
-				msg_erro = mensagem;
-				cod_erro = codErro;
-				num_erro++;
-				System.out.println("\n\n" + mensagem + "\n\n");
-			}
-		} else if (codErro == 999) {
-			cod_erro = codErro;
-			msg_erro = "";
+	public void sinalizaErro(String mensagem) {
+		if (!panico) {
+			System.out.println("[Erro Lexico]: " + mensagem + "\n");
 		}
-
-		if (codErro == 998 && cod_erro != codErro) {
-			cod_erro = codErro;
-			num_erro++;
-			System.out.println("\n\n" + mensagem + "\n\n");
-		}
-
+		panico = true;
 	}
 
 	// Volta uma posição do buffer de leitura
@@ -117,9 +100,8 @@ public class Lexer {
 		StringBuilder lexema = new StringBuilder();
 		int estado = 0;
 		char c;
-
+		this.panico = false;
 		// recupera de um erro
-		sinalizaErro("", 999);
 
 		while (true) {
 			c = '\u0000'; // null char
@@ -147,13 +129,11 @@ public class Lexer {
 				else if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
 					// Permance no estado = 0
 					estado = 0;
-					if (c == '\n' ) {
-                        this.proxLinha();
-					} 
-                        else if (c == '\r') {
-                                           
-					} 
-					else if (c == '\t') {
+					if (c == '\n') {
+						this.proxLinha();
+					} else if (c == '\r') {
+
+					} else if (c == '\t') {
 						n_column += 3;
 					}
 				} else if (Character.isLetter(c)) {
@@ -193,16 +173,14 @@ public class Lexer {
 				} else if (c == '=') {
 					return tabelaSimbolos.token("=", Tag.RELOP_EQ, n_line, n_column);
 				} else {
-					sinalizaErro("Caractere invalido '" + c + "'.\n\tLinha " + n_line + "\t coluna " + n_column,
-							estado);
+					sinalizaErro("Caractere invalido '" + c + "'.\n\tLinha " + n_line + "\t coluna " + n_column);
 				}
 				break;
 			case 3:
-				if(c == '/') {
+				if (c == '/') {
 					// Comentario
 					estado = 18;
-				}
-				else {
+				} else {
 					retornaPonteiro();
 					return tabelaSimbolos.token("*", Tag.RELOP_MULT, n_line, n_column);
 				}
@@ -249,12 +227,10 @@ public class Lexer {
 					proxLinha();
 				} else if (lookahead == END_OF_FILE) {
 					sinalizaErro(
-							"Esperado '-' mas recebeu FIM DE ARQUIVO.\n\tLinha: " + n_line + "\tColuna: " + n_column,
-							998);
+							"Esperado '-' mas recebeu FIM DE ARQUIVO.\n\tLinha: " + n_line + "\tColuna: " + n_column);
 					return null;
 				}
-				sinalizaErro("Esperado '-' mas recebeu '" + c + "'\n\tLinha: " + n_line + "\tColuna: " + n_column,
-						estado);
+				sinalizaErro("Esperado '-' mas recebeu '" + c + "'\n\tLinha: " + n_line + "\tColuna: " + n_column);
 				break;
 
 			case 11:
@@ -316,8 +292,7 @@ public class Lexer {
 					estado = 22;
 				} else {
 					retornaPonteiro();
-					sinalizaErro("Padrao para [ConstNumDouble] invalido na linha " + n_line + " coluna " + n_column,
-							estado);
+					sinalizaErro("Padrao para [ConstNumDouble] invalido na linha " + n_line + " coluna " + n_column);
 					return null;
 				}
 				break;
@@ -336,13 +311,16 @@ public class Lexer {
 				}
 				break;
 			case 24:
-				if (!Character.isDigit(c)) {
-					sinalizaErro(
-							"Esperado um digito, mas recebeu '" + c + "'\n\tLinha: " + n_line + "\tColuna: " + n_column,
-							estado);
-				} else {
+				if (Character.isDigit(c)) {
 					lexema.append(c);
 					estado = 25;
+				} else if (lookahead == END_OF_FILE) {
+					return tabelaSimbolos.token("EOF", Tag.EOF, n_line, n_column);
+				} else if (c == '\n') {
+					proxLinha();
+				} else {
+					sinalizaErro("Esperado um digito, mas recebeu '" + c + "'\n\tLinha: " + n_line + "\tColuna: "
+							+ n_column);
 				}
 				break;
 			case 25:
@@ -368,18 +346,17 @@ public class Lexer {
 				if (c == '"') {
 					// Estado Q30
 					return tabelaSimbolos.token(lexema.toString(), Tag.TP_LITERAL, n_line, n_column);
-				}
-				else if(c == '\n') {
+				} else if (c == '\n') {
 					proxLinha();
-				}
-				else if (lookahead == END_OF_FILE) {
-					sinalizaErro("Esperado um literal mas encontrou EOF" + "'.\n\tLinha " + n_line + "\t coluna " + n_column, estado);
+				} else if (lookahead == END_OF_FILE) {
+					sinalizaErro("Esperado um literal mas encontrou EOF" + "'.\n\tLinha " + n_line + "\t coluna "
+							+ n_column);
 					return tabelaSimbolos.token("EOF", Tag.EOF, n_line, n_column);
 //					return null;
 				}
 				lexema.append(c);
 				break;
-                      
+
 			} // fim switch
 		} // fim while
 	} // fim proxToken()

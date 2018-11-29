@@ -1,7 +1,7 @@
 algoritmo 
-   decl@re // simbolo @
-   x, y numerico;
-   z logico;
+   declare // simbolo @
+   numerico x, y;
+   logico z;
    
    escreva("informe um numero: ");
    leia(x);
