@@ -1,8 +1,5 @@
 package sintaxe;
 
-
-import com.sun.javafx.tools.packager.Param;
-
 import lexer.Lexer;
 import lexer.Token;
 import lexer.Tag;
@@ -10,6 +7,8 @@ import lexer.Tag;
 public class Sintaxe {
 	private final Lexer lexer;
 	private Token token;
+	private String[] esperando = new String[0];
+	private boolean semErro = true;
 	private int num_erro = 0;
 
 	public Sintaxe(Lexer l) {
@@ -40,6 +39,7 @@ public class Sintaxe {
 	public boolean eat(Tag t) {
 		if (token.getClasse() == t) {
 			advance();
+			this.semErro = true;
 			return true;
 		} else {
 			return false;
@@ -47,279 +47,295 @@ public class Sintaxe {
 	}
 
 	public void skip(String mensagem) {
-		erroSintatico(mensagem);
-		advance();
+		if (this.semErro) {
+			erroSintatico(mensagem);
+			this.semErro = false;
+		}
+	}
+
+	public void skip(String elementos[], String recebeu) {
+		if (esperando.length > 0) {
+			for (int i = 0; i < esperando.length; i++) {
+				if (esperando[i] == elementos[i]) {
+					if (esperando[i] == recebeu) {
+						esperando = new String[0];
+						this.semErro = true;
+					}
+				}
+			}
+
+		} else {
+			esperando = elementos;
+			erroSintatico("Esperando" + pseudoToString(elementos) + ", recebeu " + recebeu);
+			this.semErro = false;
+		}
+	}
+
+	public String pseudoToString(String[] a) {
+		String A = "";
+		if (a.length > 0) {
+			for (int i = 0; i < a.length; i++) {
+				if (i > 0)
+					A += " ou";
+				A += " '" + a[i] + "'";
+			}
+		}
+		return A;
 	}
 
 	public void programa() {
-		if ((token.getClasse() != Tag.KW) && !token.getLexema().equals("algoritmo")) {
-			skip("Esperado \"algoritmo\", encontrado " + "\"" + token.getLexema() + "\"");
+		if (!eat(Tag.KW_ALGORITMO)) {
+			String e[] = { "algoritmo" };
+			skip(e, token.getLexema());
 		}
-		advance();
+
 		RegexDeclVar();
-		
+
 		ListaCmd();
-			
-		if ( (token.getClasse() != Tag.KW) && !token.getLexema().equals("Fim")) {
-			skip("Esperado 'fim' mas recebeu '" + token.getLexema() + "'");
+
+		if (!eat(Tag.KW_FIM)) {
+			String e[] = { "fim" };
+			skip(e, token.getLexema());
 		}
-				
-		advance();
-		if ((token.getClasse() != Tag.KW) && !token.getLexema().equals("algoritmo")) {
-			skip("Esperado \"algoritmo\", encontrado " + "\"" + token.getLexema() + "\"");
-		}		
-		
-		advance();
+
+		if (!eat(Tag.KW_ALGORITMO)) {
+			String e[] = { "algoritmo" };
+			skip(e, token.getLexema());
+		}
+
 		listaRotina();
-		
-		if ((token.getClasse() != Tag.EOF) && !token.getLexema().equals("EOF")) {
-			skip("Esperado \"Fim de arquivo\", encontrado " + "\"" + token.getLexema() + "\"");
+
+		if (!eat(Tag.EOF)) {
+			String e[] = { "fim de arquivo (EOF)" };
+			skip(e, token.getLexema());
 		}
-		
+
 		System.out.println("Compilação chegou ao fim.");
 	}
 
 	public void RegexDeclVar() {
-		if (token.getClasse() == Tag.KW && (token.getLexema().equals("declare"))) {
-			advance();
+		if (eat(Tag.KW_DECLARE)) {
+
 			tipo();
-			
-			ListaID();
-			
-			if (token.getClasse() != Tag.SMB_SEMICOLON && (!token.getLexema().equals(";"))) {
+
+			if (eat(Tag.SMB_SEMICOLON)) {
 				ListaCmd();
 			}
-			
-			advance();
+
 			declaraVar();
-			
-			if (token.getClasse() != Tag.SMB_SEMICOLON && (!token.getLexema().equals(";"))) {
-				skip("Esperado ';' mas recebeu '" + token.getLexema()  + "'");
+
+			if (!eat(Tag.SMB_SEMICOLON)) {
+				String e[] = { ";" };
+				skip(e, token.getLexema());
 			}
-			advance();
+
 		}
-		
+
 	}
 
 	public void ListaCmd() {
 		ListaCmd_();
 	}
-	
+
 	public void listaRotina() {
 		listaRotina_();
 	}
-	
+
 	public void listaRotina_() {
-		if (token.getClasse() == Tag.KW && (token.getLexema().equals("subrotina"))){
-			advance();
+		if (eat(Tag.KW_SUBROTINA)) {
 			rotina();
 			listaRotina_();
-		}		
+		}
 	}
-	
+
 	public void rotina() {
-		if(token.getClasse() != Tag.ID) {
-			skip("Esperad um 'ID', mas recebeu " + token.getLexema());
+		if (!eat(Tag.ID)) {
+			String e[] = { "ID" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
-		if (token.getClasse() != Tag.SMB_OP && token.getLexema().equals("(")) {
-			skip("Esperad um '(', mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.SMB_OP)) {
+			String e[] = { "(" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
+
 		listaParam();
-		
-		if (token.getClasse() != Tag.SMB_CP && token.getLexema().equals(")")) {
-			skip("Esperad um ')', mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.SMB_CP)) {
+			String e[] = { ")" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
+
 		RegexDeclVar();
-		
+
 		ListaCmd();
-		
+
 		Retorno();
-		
-		if (token.getClasse() != Tag.KW && token.getLexema().equals("fim")) {
-			skip("Esperad um 'fim', mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.KW_FIM)) {
+			String e[] = { "fim" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
-		
-		if (token.getClasse() != Tag.KW && token.getLexema().equals("rotina")) {
-			skip("Esperado um 'rotina', mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.KW_SUBROTINA)) {
+			String e[] = { "subrotina" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
-	
+
 	}
-	
+
 	public void listaParam() {
-		
+
 		param();
 		listaParam_();
 	}
-	
+
 	public void listaParam_() {
-		if (token.getClasse() != Tag.SMB_COMMA && token.getLexema().equals(",")) {
-			advance();
+		if (eat(Tag.SMB_COMMA)) {
 			listaParam_();
 		}
 	}
-	
+
 	public void param() {
 		tipo();
-		ListaID();
 	}
-	
+
 	public void Retorno() {
-		
+
 	}
-	
+
 	public void tipo() {
-		if (token.getClasse() != Tag.KW && !(token.getLexema().equals("logico") || token.getLexema().equals("numerico")
-				|| token.getLexema().equals("literal") || token.getLexema().equals("nulo"))) {
-			skip("Esperado um TIPO para declaração");
+		if (!eat(Tag.KW_LOGICO) && !eat(Tag.KW_NULO) && !eat(Tag.KW_NUMERICO) && !eat(Tag.KW_LITERAL)) {
+			String e[] = { "logico", "nulo", "numerico", "literal" };
+			skip(e, token.getLexema());
 		}
-		advance();
+		listaID();
 	}
 
 	public void declaraVar() {
-		if (token.getClasse() != Tag.KW && !(token.getLexema().equals("logico") || token.getLexema().equals("numerico")
-				|| token.getLexema().equals("literal") || token.getLexema().equals("nulo"))) {
-			skip("Esperado um TIPO para declaração");
-		}
-		advance();
-		ListaID();
+		tipo();
 	}
 
-	public void ListaID() {
-		if (token.getClasse() != Tag.ID) {
-			skip("Esperando um ID mas recebeu " + token.getClasse() + "->" + token.getLexema());
+	public void listaID() {
+		if (!eat(Tag.ID)) {
+			String e[] = { "ID" };
+			skip(e, token.getLexema());
 		}
-		advance();
-		ListaID_();
+
+		listaID_();
 	}
 
-	public void ListaID_() {
-		if (token.getClasse() == Tag.SMB_COMMA) {
-			advance();
-			ListaID();
+	public void listaID_() {
+		if (eat(Tag.SMB_COMMA)) {
+			listaID();
 		}
 	}
 
 	public void ListaCmd_() {
-		if (token.getClasse() == Tag.KW) {
-			switch (token.getLexema()) {
-			case "se":
-				cmdSe();
-				break;
-			case "enquanto":
-				cmdEnquanto();
-				break;
-			case "para":
-				cmdPara();
-				break;
-			case "repita":
-				cmdRepita();
-				break;
-			case "escreva":
-				cmdEscreva();
-				break;
-			case "leia":
-				cmdLeia();
-				break;
-			}
-		}
-		else if (token.getClasse() == Tag.ID) {
-			advance();
+		if (eat(Tag.ID)) {
 			cmd_();
 			ListaCmd_();
+		} else if (eat(Tag.KW_SE)) {
+			cmdSe();
+		} else if (eat(Tag.KW_ENQUANTO)) {
+			cmdEnquanto();
+		} else if (eat(Tag.KW_PARA)) {
+			cmdPara();
+		} else if (eat(Tag.KW_REPITA)) {
+			cmdRepita();
+		} else if (eat(Tag.KW_ESCREVA)) {
+			cmdEscreva();
+		} else if (eat(Tag.KW_LEIA)) {
+			cmdLeia();
 		}
 	}
 
 	public void cmd_() {
-		if ((token.getClasse() == Tag.RELOP_ASSIGN) && (token.getLexema().equals("<--"))) {
-			advance();
+		if (eat(Tag.RELOP_ASSIGN)) {
+
 			cmdAtrib();
-		}
-		else if((token.getClasse() == Tag.SMB_OP) && (token.getLexema().equals("("))) {
-			advance();
+
+		} else if (eat(Tag.SMB_OP)) {
+
 			cmdChamaRotina();
-		}
-		else {
-			skip("Esperando '(' ");
+
+		} else {
+			String e[] = { "<--", "(" };
+			skip(e, token.getLexema());
+
 		}
 	}
 
-	
 	public void cmdChamaRotina() {
 		regexExp();
-		
-		if (token.getClasse() != Tag.SMB_CP && (!token.getLexema().equals(")"))){
-			skip("Esperando ')' ");
+
+		if (!eat(Tag.SMB_CP)) {
+			String e[] = { ")" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
-		if (token.getClasse() != Tag.SMB_SEMICOLON && (token.getLexema().equals(";"))){
-			skip("Esperando ';' ");
-		}	
-		advance();
+
+		if (!eat(Tag.SMB_SEMICOLON)) {
+			String e[] = { "," };
+			skip(e, token.getLexema());
+
+		}
+
 	}
-	
+
 	public void cmdAtrib() {
 		expressao();
-		if ((token.getClasse() != Tag.SMB_SEMICOLON) && (!token.getLexema().equals(";"))) {
-			skip("Esperado ';' mas recebeu " + token.getLexema());
+		if (!eat(Tag.SMB_SEMICOLON)) {
+			String e[] = { ";" };
+			skip(e, token.getLexema());
+
 		}
-		advance();
+
 	}
-	
+
 	public void cmdLeia() {
-		advance();
-		if ((token.getClasse() != Tag.SMB_OP) && (token.getLexema() != "(")) {
-			skip("Esperado '(' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.SMB_OP)) {
+			String e[] = { "(" };
+			skip(e, token.getLexema());
 		}
 
-		advance();
-		if (token.getClasse() != Tag.ID) {
-			skip("Esperado ID mas recebeu " + token.getLexema());
+		if (!eat(Tag.ID)) {
+			String e[] = { "ID" };
+			skip(e, token.getLexema());
 		}
 
-		advance();
-		if ((token.getClasse() != Tag.SMB_CP) && (token.getLexema() != ")")) {
-			skip("Esperado '(' mas recebeu " + token.getLexema());
+		if (!eat(Tag.SMB_CP)) {
+			String e[] = { "(" };
+			skip(e, token.getLexema());
 		}
 
-		advance();
-		if ((token.getClasse() != Tag.SMB_SEMICOLON) && (token.getLexema() != ";")) {
-			skip("Esperado '(' mas recebeu " + token.getLexema());
+		if (!eat(Tag.SMB_SEMICOLON)) {
+			String e[] = { ";" };
+			skip(e, token.getLexema());
 		}
 
-		advance();
 		ListaCmd_();
 	}
 
 	public void cmdEscreva() {
-		advance();
-		if ((token.getClasse() != Tag.SMB_OP) && (!token.getLexema().equals("("))) {
-			skip("Esperado '(' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.SMB_OP)) {
+			String e[] = { "(" };
+			skip(e, token.getLexema());
 		}
-		advance();
-		
+
 		expressao();
 
-		if ((token.getClasse() != Tag.SMB_CP) && (!token.getLexema().equals(")"))) {
-			skip("Esperado ')' mas recebeu " + token.getLexema());
+		if (!eat(Tag.SMB_CP)) {
+			String e[] = { ")" };
+			skip(e, token.getLexema());
 		}
 
-		advance();
-		if ((token.getClasse() != Tag.SMB_SEMICOLON) && (!token.getLexema().equals(";"))) {
-			skip("Esperado ';' mas recebeu " + token.getLexema());
+		if (!eat(Tag.SMB_SEMICOLON)) {
+			String e[] = { ";" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
+
 		ListaCmd_();
 	}
 
@@ -327,141 +343,134 @@ public class Sintaxe {
 		exp1();
 		exp_();
 	}
-	
+
 	public void exp_() {
-		if ((token.getClasse() == Tag.RELOP_LT) && token.getLexema().equals(">") || (token.getClasse() == Tag.RELOP_LE) && token.getLexema().equals("<=") || 
-			(token.getClasse() == Tag.RELOP_GT) && token.getLexema().equals("<") || (token.getClasse() == Tag.RELOP_GE) && token.getLexema().equals(">=") || 
-			(token.getClasse() == Tag.RELOP_EQ) && token.getLexema().equals("=") || (token.getClasse() == Tag.RELOP_NE) && token.getLexema().equals("<>")) {
-				advance();
-				exp1();
-				exp_();
+		if (eat(Tag.RELOP_LT) || eat(Tag.RELOP_LE) || eat(Tag.RELOP_GT) || eat(Tag.RELOP_GE) || eat(Tag.RELOP_EQ)
+				|| eat(Tag.RELOP_NE)) {
+			exp1();
+			exp_();
 		}
 	}
-	
+
 	public void exp1() {
 		exp2();
 		exp1_();
 	}
-	
+
 	public void exp1_() {
-		if ((token.getClasse() == Tag.KW) && token.getLexema().equals("E") || (token.getClasse() == Tag.KW) && token.getLexema().equals("Ou")) {
-			advance();
+		if (eat(Tag.KW_E) || eat(Tag.KW_OU)) {
 			exp2();
 			exp1_();
 		}
 	}
-	
+
 	public void exp2() {
 		exp3();
 		exp2_();
 	}
-	
+
 	public void exp2_() {
-		if ((token.getClasse() == Tag.RELOP_SUM) && token.getLexema().equals("+") || (token.getClasse() == Tag.RELOP_MINUS) && token.getLexema().equals("-")) {
-			advance();
+		if (eat(Tag.RELOP_SUM) || eat(Tag.RELOP_MINUS)) {
 			exp3();
 			exp2_();
 		}
 	}
-	
+
 	public void exp3() {
 		exp4();
 		exp3_();
 	}
-	
+
 	public void exp3_() {
-		if ((token.getClasse() == Tag.RELOP_MULT) && token.getLexema().equals("*") || (token.getClasse() == Tag.RELOP_DIV) && token.getLexema().equals("/")) {
-			advance();
+		if (eat(Tag.RELOP_MULT) || eat(Tag.RELOP_DIV)) {
 			exp4();
 			exp3_();
 		}
 	}
-	
+
 	public void exp4() {
-		if (token.getClasse() == Tag.ID) {
-			advance();
+		if (eat(Tag.ID)) {
+
 			exp4_();
-		}
-		else if(token.getClasse() == Tag.SMB_OP && token.getLexema().equals("(")) {
-			advance();
+		} else if (eat(Tag.SMB_OP)) {
+
 			expressao();
-			if(token.getClasse() != Tag.SMB_CP && !token.getLexema().equals(")")){
-				skip("Esperado ')', mas recebeu "+ token.getLexema());
+			if (!eat(Tag.SMB_CP)) {
+				String e[] = { ")" };
+				skip(e, token.getLexema());
 			}
-			advance();
-		}
-		else if ((token.getClasse() == Tag.TP_NUMERICO || token.getClasse() == Tag.TP_LITERAL) || 
-				(token.getClasse() == Tag.KW && token.getLexema().equals("verdadeiro")) ||
-				(token.getClasse() == Tag.KW && token.getLexema().equals("falso"))){
-					advance();
-				}
-		else {
+
+		} else if (eat(Tag.TP_NUMERICO) || eat(Tag.TP_LITERAL) || eat(Tag.KW_VERDADEIRO) || eat(Tag.KW_FALSO)) {
+			return;
+		} else {
 			opUnario();
 		}
 	}
-	
+
 	public void exp4_() {
-		if (token.getClasse() == Tag.SMB_OP && token.getLexema().equals("(")){
+		if (eat(Tag.SMB_OP)) {
 			regexExp();
-			if (token.getClasse() != Tag.SMB_CP && !token.getLexema().equals(")")){
-				skip("expressão invalida 3");
+			if (!eat(Tag.SMB_CP)) {
+				String e[] = { ")" };
+				skip(e, token.getLexema());
 			}
 		}
-		
+
 	}
-	
+
 	public void opUnario() {
-		if((token.getClasse() == Tag.KW) && token.getLexema().equals("Nao")){
-			advance();
-			expressao();	
+		if (eat(Tag.KW_NAO)) {
+
+			expressao();
 		}
+
 	}
-	
+
 	public void cmdSe() {
-		advance();
-		if((token.getClasse() != Tag.SMB_OP) && !token.getLexema().equals("(")){
-			skip("Esperado '(' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.SMB_OP)) {
+			String e[] = { "(" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
+
 		expressao();
-		
-		if((token.getClasse() != Tag.SMB_CP) && !token.getLexema().equals(")")){
-			skip("Esperado ')' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.SMB_CP)) {
+			String e[] = { ")" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
-		
-		if((token.getClasse() != Tag.KW) && !token.getLexema().equals("inicio")){
-			skip("Esperado 'Inicio' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.KW_INICIO)) {
+			String e[] = { "Inicio" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
+
 		ListaCmd();
-				
-		if((token.getClasse() != Tag.KW) && !token.getLexema().equals("fim")){
-			skip("Esperado 'Fim' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.KW_FIM)) {
+			String e[] = { "Fim" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
+
 		cmdSe_();
-				
+
 	}
 
 	public void cmdSe_() {
-		if((token.getClasse() == Tag.KW) && token.getLexema().equals("senao")){
-			advance();
-			if((token.getClasse() != Tag.KW) && !token.getLexema().equals("inicio")){
-				skip("Esperado 'inicio' mas recebeu " + token.getLexema());
+		if (eat(Tag.KW_SENAO)) {
+
+			if (!eat(Tag.KW_INICIO)) {
+				String e[] = { "Inicio" };
+				skip(e, token.getLexema());
 			}
-			
-			advance();
+
 			ListaCmd();
-			
-			if((token.getClasse() != Tag.KW) && !token.getLexema().equals("fim")){
-				skip("Esperado 'Fim' mas recebeu " + token.getLexema());
+
+			if (!eat(Tag.KW_FIM)) {
+				String e[] = { "Fim" };
+				skip(e, token.getLexema());
 			}
-			
+
 		}
 	}
 
@@ -469,101 +478,99 @@ public class Sintaxe {
 		expressao();
 		regexExp_();
 	}
-	
-	public void regexExp_(){
-		if((token.getClasse() == Tag.SMB_COMMA) && token.getLexema().equals(",")) {
-			advance();
+
+	public void regexExp_() {
+		if (eat(Tag.SMB_COMMA)) {
+
 			expressao();
 			regexExp_();
 		}
 	}
-	
+
 	public void cmdSenao() {
 
 	}
 
 	public void cmdEnquanto() {
 
-		advance();
-		if((token.getClasse() != Tag.SMB_OP) && !token.getLexema().equals("(")){
-			skip("Esperado '(' mas recebeu " + token.getLexema());
+		if (!eat(Tag.SMB_OP)) {
+			String e[] = { "(" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
+
 		expressao();
-		
-		if((token.getClasse() != Tag.SMB_CP) && !token.getLexema().equals(")")){
-			skip("Esperado ')' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.SMB_CP)) {
+			String e[] = { ")" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
-		
-		if((token.getClasse() != Tag.KW) && !token.getLexema().equals("faca")){
-			skip("Esperado 'faca' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.KW_FACA)) {
+			String e[] = { "faca" };
+			skip(e, token.getLexema());
 		}
-		
-		if((token.getClasse() != Tag.KW) && !token.getLexema().equals("inicio")){
-			skip("Esperado 'Inicio' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.KW_INICIO)) {
+			String e[] = { "Inicio" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
+
 		ListaCmd();
-				
-		if((token.getClasse() != Tag.KW) && !token.getLexema().equals("fim")){
-			skip("Esperado 'Fim' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.KW_FIM)) {
+			String e[] = { "fim" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
+
 		cmdSe_();
-				
-	
 
 	}
 
 	public void cmdPara() {
-		advance();
-		if((token.getClasse() != Tag.ID)){
-			skip("Esperado 'ID' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.ID)) {
+			String e[] = { "ID" };
+			skip(e, token.getLexema());
 		}
 
-		advance();
 		cmdAtrib();
-				
-		if((token.getClasse() != Tag.KW) && !token.getLexema().equals("ate")){
-			skip("Esperado 'ate' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.KW_ATE)) {
+			String e[] = { "ate" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
+
 		expressao();
-		
-		if((token.getClasse() != Tag.KW) && !token.getLexema().equals("faca")){
-			skip("Esperado 'faca' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.KW_FACA)) {
+			String e[] = { "faca" };
+			skip(e, token.getLexema());
 		}
-		
-		if((token.getClasse() != Tag.KW) && !token.getLexema().equals("inicio")){
-			skip("Esperado 'Inicio' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.KW_INICIO)) {
+			String e[] = { "inicio" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
+
 		ListaCmd();
-				
-		if((token.getClasse() != Tag.KW) && !token.getLexema().equals("fim")){
-			skip("Esperado 'Fim' mas recebeu " + token.getLexema());
+
+		if (!eat(Tag.KW_FIM)) {
+			String e[] = { "fim" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
+
 		cmdSe_();
-				
+
 	}
 
 	public void cmdRepita() {
-		advance();
+
 		ListaCmd();
-		if((token.getClasse() != Tag.KW) && !token.getLexema().equals("ate")){
-			skip("Esperado 'ate' mas recebeu " + token.getLexema());
+		if (!eat(Tag.KW_ATE)) {
+			String e[] = { "ate" };
+			skip(e, token.getLexema());
 		}
-		
-		advance();
+
 		expressao();
 	}
 }
